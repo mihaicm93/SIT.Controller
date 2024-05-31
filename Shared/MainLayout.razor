@@ -1,0 +1,60 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>SIT.Controller</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4 auth">
+            <LoginDisplay />
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    // Inject NavigationManager
+    [Inject] private NavigationManager ?NavMan { get; set; }
+
+    // Inject AuthenticationStateProvider to access authentication state
+    [Inject] private AuthenticationStateProvider ?AuthenticationStateProvider { get; set; }
+
+    // Override OnInitializedAsync method
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if NavMan is null
+        if (NavMan == null)
+        {
+            throw new InvalidOperationException("NavigationManager has not been injected.");
+        }
+
+        // Check if AuthenticationStateProvider is null
+        if (AuthenticationStateProvider == null)
+        {
+            throw new InvalidOperationException("AuthenticationStateProvider has not been injected.");
+        }
+
+        // Get the authentication state
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (authState.User.Identity == null)
+        {
+            throw new InvalidOperationException("User.Identity has not been injected.");
+        }
+        // Check if the app is running locally
+        var isLocalhost = NavMan.BaseUri.Contains("localhost") || NavMan.BaseUri.Contains("127.0.0.1");
+        // Check if the user is not authenticated and not already on the login page
+        if (!authState.User.Identity.IsAuthenticated && !isLocalhost)
+        {
+            // Redirect to the login page
+            NavMan.NavigateTo("Identity/Account/Login", true);
+        }
+
+    }
+}

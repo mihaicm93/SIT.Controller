@@ -1,0 +1,204 @@
+﻿@page "/serverprofile"
+@using SIT.Controller.Controllers
+@inject GameProfileService ServerProfileService
+@inject IJSRuntime JSRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using Microsoft.AspNetCore.Components.Forms
+@using System.IO
+
+<PageTitle>Server Profile</PageTitle>
+
+<h1>Server Profile</h1>
+
+<p>This page lets you view and interact with your game server profile.</p>
+
+<div class="mb-3">
+    <input type="text" @bind="username" style="max-width: 500px" placeholder="Enter your username" class="form-control" @oninput="UpdateSearchButtonState" />
+    <button class="btn btn-primary mt-2" @onclick="SearchProfile" disabled="@IsSearchDisabled">Search</button>
+</div>
+
+@if (profiles != null && profiles.Any())
+{
+    <div>
+        <h3>Search Results:</h3>
+        @foreach (var profile in profiles)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@profile.info.username</h5>
+                    <p class="card-text"><strong>ID:</strong> @profile.info.id</p>
+                    <p class="card-text"><strong>Edition:</strong> @profile.info.edition</p>
+                    <p class="card-text"><strong>Wipe:</strong> @profile.info.wipe</p>
+                    <button class="btn btn-success" @onclick="() => DownloadProfile(profile)">Download</button>
+                    <button class="btn btn-primary" disabled @onclick="() => EditProfile(profile)">Edit</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+else if (profiles != null)
+{
+    <Alert Color="AlertColor.Warning" Dismissable="true"> <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>Could not find the searched profile</Alert>
+}
+
+<hr>
+
+<p>Upload a profile to the server</p>
+
+<div class="mb-3">
+    <InputFile id="fileInput" OnChange="HandleFileSelected" />
+</div>
+<button class="btn btn-primary mt-2" @onclick="UploadFile" disabled="@(isFileSelected == false)">Upload</button>
+
+
+@if (editingProfile != null)
+{
+    <div>
+        <h3>Edit Profile</h3>
+        <textarea @bind="profileJson" class="form-control" rows="10"></textarea>
+        <button class="btn btn-primary mt-2" @onclick="SaveProfile">Save</button>
+    </div>
+}
+
+<script>
+    function resetFileInput(inputId) {
+        document.getElementById(inputId).value = "";
+    }
+</script>
+
+@code {
+    private string username;
+    private List<GameProfileService.UserProfile> profiles;
+    private bool searched;
+    private bool isFileSelected = false;
+    private GameProfileService.UserProfile editingProfile;
+    private string profileJson;
+    private string profilesDirectory;
+    private IBrowserFile uploadedFile;
+
+    protected override void OnInitialized()
+    {
+        profilesDirectory = Path.Combine(Configuration["ServerPath"], "user", "profiles");
+    }
+
+    private async Task SearchProfile()
+    {
+        profiles = ServerProfileService.SearchProfilesByUsername(username);
+        searched = true;
+    }
+
+    private async Task DownloadProfile(GameProfileService.UserProfile profile)
+    {
+        var json = JsonSerializer.Serialize(profile, new JsonSerializerOptions { WriteIndented = true });
+        await JSRuntime.InvokeVoidAsync("downloadFile", $"{profile.info.id}.json", json);
+    }
+
+    private async Task EditProfile(GameProfileService.UserProfile profile)
+    {
+        editingProfile = profile;
+        var filePath = Path.Combine(profilesDirectory, $"{profile.info.id}.json");
+        if (File.Exists(filePath))
+        {
+            profileJson = await File.ReadAllTextAsync(filePath);
+        }
+        else
+        {
+            Console.WriteLine($"Profile file not found for ID: {profile.info.id}");
+        }
+    }
+
+    private async Task SaveProfile()
+    {
+        if (IsValidJson(profileJson))
+        {
+            try
+            {
+                var filePath = Path.Combine(profilesDirectory, $"{editingProfile.info.id}.json");
+                await File.WriteAllTextAsync(filePath, profileJson);
+                Console.WriteLine("Profile saved successfully.");
+                editingProfile = null;
+                await SearchProfile();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving profile to file: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid JSON format. Please correct the JSON before saving.");
+        }
+    }
+
+    private bool IsValidJson(string json)
+    {
+        try
+        {
+            JsonDocument.Parse(json);
+            return true;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        if (e.File != null)
+        {
+            isFileSelected = true;
+            uploadedFile = e.File;
+        }
+        else
+        {
+            isFileSelected = false;
+        }
+    }
+
+    private async Task UploadFile()
+    {
+        if (uploadedFile != null)
+        {
+            try
+            {
+                var filename = uploadedFile.Name.Replace(" ", "_");
+                var filePath = Path.Combine(profilesDirectory, filename);
+
+                using (var fileStream = File.Create(filePath))
+                {
+                    long maxAllowedSize = 1024 * 1024 * 10; // 10 MB
+                    using (var inputStream = uploadedFile.OpenReadStream(maxAllowedSize))
+                    {
+                        await inputStream.CopyToAsync(fileStream);
+                    }
+                }
+
+                Console.WriteLine("Profile uploaded successfully.");
+                await SearchProfile();
+
+                // Reset the file input
+                await JSRuntime.InvokeVoidAsync("resetFileInput", "fileInput");
+                isFileSelected = false; // Reset the flag
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error uploading profile: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("No file selected for upload.");
+        }
+    }
+
+    private void UpdateSearchButtonState(ChangeEventArgs e)
+    {
+        // This function will automatically be triggered due to @bind in the input
+        // No implementation needed here, just keeping it for explanation
+    }
+
+    private bool IsSearchDisabled => string.IsNullOrWhiteSpace(username);
+}

@@ -1,0 +1,86 @@
+﻿@page "/"
+@inject Controllers.ServerManager serverManager
+@inject NavigationManager navigationManager
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<PageTitle>SIT Server Control</PageTitle>
+
+<h1>Server Management Console</h1>
+
+<p>Welcome to the Server Management Dashboard. Control and monitor your server directly from this interface.</p>
+
+<SurveyPrompt Title="Tell us how this tool is helping you manage your server!" />
+
+<div data-bs-theme="dark">
+    <button class="btn @(isServerRunning ? "btn-danger" : "btn-success")" @onclick="ToggleServer">
+        @(isServerRunning ? "Stop Server" : "Start Server")
+    </button>
+
+    <Button Type="ButtonType.Button" Color="ButtonColor.Primary" @onclick="ToggleContentAsync">Server Console</Button>
+    <Collapse @ref="collapse1" style="margin-top: 10px;">
+        <Card>
+            <CardBody style="height: 300px; overflow-y: auto; background-color: #333" id="consoleOutput">
+                @foreach (var line in consoleOutput)
+                {
+                    <p>@line</p>
+                }
+            </CardBody>
+        </Card>
+    </Collapse>
+</div>
+
+@code {
+    private bool isServerRunning;
+    private List<string> consoleOutput = new List<string>();
+    private System.Threading.Timer updateTimer;
+    Collapse collapse1 = default!;
+
+
+    protected override void OnInitialized()
+    {
+        serverManager.OnOutputReceived += HandleServerOutput;
+        UpdateServerStatus();
+        updateTimer = new System.Threading.Timer(_ => InvokeAsync(UpdateServerStatus), null, 2000, 2000);
+    }
+
+    private void UpdateServerStatus()
+    {
+        isServerRunning = serverManager.IsServerRunning();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleServerOutput(string output)
+    {
+        output = Controllers.ServerManager.CleanInput(output);
+        consoleOutput.Insert(0, output);
+        InvokeAsync(StateHasChanged); 
+    }
+
+    private void ToggleServer()
+    {
+        if (isServerRunning)
+        {
+            serverManager.StopServer();
+        }
+        else
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("config.json")
+                .Build();
+
+            var serverPath = config["ServerPath"];
+            serverManager.StartServer(serverPath);
+        }
+        UpdateServerStatus();
+    }
+
+    private async Task ToggleContentAsync() => await collapse1.ToggleAsync();
+
+
+    public void Dispose()
+    {
+        updateTimer?.Dispose();
+        serverManager.OnOutputReceived -= HandleServerOutput;
+    }
+}
