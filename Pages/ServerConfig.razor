@@ -1,0 +1,211 @@
+﻿@page "/serverconfig"
+@inject Controllers.ServerManager serverManager
+@inject NavigationManager navigationManager
+@inject IJSRuntime JSRuntime
+@inject IConfiguration Configuration
+@implements IDisposable
+@using SIT.Controller.Controllers
+
+<PageTitle>SIT Server Control</PageTitle>
+
+<h1>Server Management Console</h1>
+
+<p>Welcome to the Server Management Dashboard. Control and monitor your server directly from this interface.</p>
+
+<SurveyPrompt Title="Tell us how this tool is helping you manage your server!" />
+
+<div data-bs-theme="dark">
+    <button class="btn @(isServerRunning ? "btn-danger" : "btn-success")" @onclick="ToggleServer">
+        <span class="oi @(isServerRunning ? "oi-media-stop" : "oi-media-play")" aria-hidden="true"></span>
+        @(isServerRunning ? "Stop Server" : "Start Server")
+    </button>
+
+    <Button Type="ButtonType.Button" Color="ButtonColor.Primary" @onclick="ToggleContentAsync"><span class="oi oi-terminal" aria-hidden="true"></span> Server Console</Button>
+    <Collapse @ref="collapse1" style="margin-top: 10px;">
+        <Card>
+            <CardBody style="height: 300px; overflow-y: auto; background-color: #333" id="consoleOutput">
+                @foreach (var line in consoleOutput)
+                {
+                    <p>@line</p>
+                }
+            </CardBody>
+        </Card>
+    </Collapse>
+</div>
+
+<hr>
+@if (@isServerRunning == false)
+{
+    <div class="d-grid gap-2">
+        <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">Core Configuration</Button>
+        <Collapse @ref="core">
+            <Card>
+                <CardBody style="height: 300px;">
+                    <div class="row mb-3">
+                        <label class="col-md-2 col-form-label">Server Name</label>
+                        <div class="col-md-10">
+                            <!-- Bind the serverName property to the value attribute -->
+                            <InputText @bind-Value="serverName" />
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <label class="col-md-2 col-form-label">SPT Friend</label>
+                        <div class="col-md-10">
+                            <!-- Button to enable sptFriendEnabled setting -->
+                            <button class="btn @(sptFriendEnabled ? "btn-secondary" : "btn-success")" @onclick="EnableSptFriend" disabled="@sptFriendEnabled">
+                                Enable
+                            </button>
+                            <!-- Button to disable sptFriendEnabled setting -->
+                            <button class="btn @(sptFriendEnabled ? "btn-danger" : "btn-secondary")" @onclick="DisableSptFriend" disabled="@(sptFriendEnabled ? false : true)">
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <label class="col-md-2 col-form-label">Commando</label>
+                        <div class="col-md-10">
+                            <!-- Button to enable commandoEnabled setting -->
+                            <button class="btn @(commandoEnabled ? "btn-secondary" : "btn-success")" @onclick="EnableCommando" disabled="@commandoEnabled">
+                                Enable
+                            </button>
+                            <!-- Button to disable commandoEnabled setting -->
+                            <button class="btn @(commandoEnabled ? "btn-danger" : "btn-secondary")" @onclick="DisableCommando" disabled="@(commandoEnabled ? false : true)">
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" @onclick="SaveCoreConfig">Save</button>
+
+                </CardBody>
+            </Card>
+        </Collapse>
+    </div>
+}
+else
+{
+    <div class="d-grid gap-2">
+        <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">
+            Core Configuration is Disabled while the Server is running</Button>
+    </div>
+}
+<hr>
+
+<div class="d-grid gap-2">
+</div>
+
+<hr>
+
+@code {
+    private bool isServerRunning;
+    private List<string> consoleOutput = new List<string>();
+    private System.Threading.Timer updateTimer;
+    Collapse collapse1 = default!;
+    Collapse core = default!;
+    private CoreConfigService coreConfigService;
+    private string serverName;
+    private bool sptFriendEnabled;
+    private bool commandoEnabled;
+
+    protected override void OnInitialized()
+    {
+        coreConfigService = new CoreConfigService(Configuration);
+        LoadCoreConfig();
+        serverManager.OnOutputReceived += HandleServerOutput;
+        UpdateServerStatus();
+        updateTimer = new System.Threading.Timer(_ => InvokeAsync(UpdateServerStatus), null, 2000, 2000);
+    }
+
+    private void SaveCoreConfig()
+    {
+        coreConfigService.UpdateField("serverName", serverName);
+        coreConfigService.UpdateField("features.chatbotFeatures.sptFriendEnabled", sptFriendEnabled);
+        coreConfigService.UpdateField("features.chatbotFeatures.commandoEnabled", commandoEnabled);
+    }
+
+    private void EnableSptFriend()
+    {
+        sptFriendEnabled = true;
+        SaveCoreConfig();
+    }
+
+    private void DisableSptFriend()
+    {
+        sptFriendEnabled = false;
+        SaveCoreConfig();
+    }
+
+    private void EnableCommando()
+    {
+        commandoEnabled = true;
+        SaveCoreConfig();
+    }
+
+    private void DisableCommando()
+    {
+        commandoEnabled = false;
+        SaveCoreConfig();
+    }
+
+    private void UpdateServerStatus()
+    {
+        isServerRunning = serverManager.IsServerRunning();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleServerOutput(string output)
+    {
+        output = ServerManager.CleanInput(output);
+        consoleOutput.Insert(0, output);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void ToggleServer()
+    {
+        if (isServerRunning)
+        {
+            serverManager.StopServer();
+        }
+        else
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("config.json")
+                .Build();
+
+            var serverPath = config["ServerPath"];
+            serverManager.StartServer(serverPath);
+        }
+        UpdateServerStatus();
+    }
+
+
+    private void LoadCoreConfig()
+    {
+        var coreConfig = coreConfigService.LoadCoreConfig();
+        if (coreConfig != null)
+        {
+            if (coreConfig.ServerName == null)
+            {
+                throw new InvalidOperationException("ServerName is null");
+            }
+
+            if (coreConfig.Features != null && coreConfig.Features.ChatbotFeatures != null)
+            {
+                serverName = coreConfig.ServerName;
+                sptFriendEnabled = coreConfig.Features.ChatbotFeatures.SptFriendEnabled;
+                commandoEnabled = coreConfig.Features.ChatbotFeatures.CommandoEnabled;
+            }
+        }
+    }
+
+    private async Task ToggleContentAsync() => await collapse1.ToggleAsync();
+
+    private async Task ToggleCoreContentAsync() => await core.ToggleAsync();
+
+    public void Dispose()
+    {
+        updateTimer?.Dispose();
+        serverManager.OnOutputReceived -= HandleServerOutput;
+    }
+}

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace SIT.Controller.Controllers
 {
     public class ServerManager
     {
-        public event Action<string> ?OnOutputReceived;
+        public event Action<string>? OnOutputReceived;
 
         // Checks if the server process is currently running
         public bool IsServerRunning()

@@ -16,7 +16,8 @@
 
 <div class="mb-3">
     <input type="text" @bind="username" style="max-width: 500px" placeholder="Enter your username" class="form-control" @oninput="UpdateSearchButtonState" />
-    <button class="btn btn-primary mt-2" @onclick="SearchProfile" disabled="@IsSearchDisabled">Search</button>
+    <button class="btn btn-primary mt-2" @onclick="SearchProfile" disabled="@IsSearchDisabled"><span class="oi oi-magnifying-glass" aria-hidden="true"></span>Search</button>
+
 </div>
 
 @if (profiles != null && profiles.Any())
@@ -27,11 +28,13 @@
         {
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">@profile.info.username</h5>
+                    <h5 class="card-title"><strong>Name:</strong>@profile.info.username</h5>
                     <p class="card-text"><strong>ID:</strong> @profile.info.id</p>
                     <p class="card-text"><strong>Edition:</strong> @profile.info.edition</p>
                     <p class="card-text"><strong>Wipe:</strong> @profile.info.wipe</p>
-                    <button class="btn btn-success" @onclick="() => DownloadProfile(profile)">Download</button>
+                    <button class="btn btn-success" @onclick="() => DownloadProfile(profile)">
+                        <span class="oi oi-cloud-download" aria-hidden="true"></span> Download
+                        </button>
                     <button class="btn btn-primary" disabled @onclick="() => EditProfile(profile)">Edit</button>
                 </div>
             </div>
@@ -50,7 +53,10 @@ else if (profiles != null)
 <div class="mb-3">
     <InputFile id="fileInput" OnChange="HandleFileSelected" />
 </div>
-<button class="btn btn-primary mt-2" @onclick="UploadFile" disabled="@(isFileSelected == false)">Upload</button>
+<button class="btn btn-primary mt-2" @onclick="UploadFile" disabled="@(isFileSelected == false)">
+    <span class="oi oi-cloud-upload" aria-hidden="true"></span> Upload
+</button>
+
 
 
 @if (editingProfile != null)

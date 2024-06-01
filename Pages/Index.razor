@@ -13,11 +13,12 @@
 <SurveyPrompt Title="Tell us how this tool is helping you manage your server!" />
 
 <div data-bs-theme="dark">
-    <button class="btn @(isServerRunning ? "btn-danger" : "btn-success")" @onclick="ToggleServer">
+    <button class="btn @(isServerRunning ? "btn-danger" : "btn-success") btn-lg" @onclick="ToggleServer">
+        <span class="oi @(isServerRunning ? "oi-media-stop" : "oi-media-play")" aria-hidden="true"></span>
         @(isServerRunning ? "Stop Server" : "Start Server")
     </button>
 
-    <Button Type="ButtonType.Button" Color="ButtonColor.Primary" @onclick="ToggleContentAsync">Server Console</Button>
+    <Button Type="ButtonType.Button" Color="ButtonColor.Primary" Size="Size.Large" @onclick="ToggleContentAsync">Server Console</Button>
     <Collapse @ref="collapse1" style="margin-top: 10px;">
         <Card>
             <CardBody style="height: 300px; overflow-y: auto; background-color: #333" id="consoleOutput">
@@ -29,6 +30,7 @@
         </Card>
     </Collapse>
 </div>
+
 
 @code {
     private bool isServerRunning;
