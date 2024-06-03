@@ -5,6 +5,8 @@
 @inject IConfiguration Configuration
 @implements IDisposable
 @using SIT.Controller.Controllers
+@using System
+@using System.Text
 
 <PageTitle>SIT Server Control</PageTitle>
 
@@ -40,7 +42,7 @@
         <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">Core Configuration</Button>
         <Collapse @ref="core">
             <Card>
-                <CardBody style="height: 300px;">
+                <CardBody style="height: 400px;">
                     <div class="row mb-3">
                         <label class="col-md-2 col-form-label">Server Name</label>
                         <div class="col-md-10">
@@ -76,8 +78,16 @@
                             </button>
                         </div>
                     </div>
-                    <button class="btn btn-primary" @onclick="SaveCoreConfig">Save</button>
-
+                    <hr>
+                    <div class="row mb-3">
+                        <label class="col-md-2 col-form-label">Server Location</label>
+                        <div class="col-md-10">
+                            <!-- Button to locate server -->
+                            <button class="btn btn-secondary" @onclick="SelectServerFolder">Set Location</button><p>Current Location: @serverPath</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <button class="btn btn-primary btn-sm" @onclick="SaveCoreConfig">Save</button>
                 </CardBody>
             </Card>
         </Collapse>
@@ -98,23 +108,82 @@ else
 <hr>
 
 @code {
-    private bool isServerRunning;
     private List<string> consoleOutput = new List<string>();
     private System.Threading.Timer updateTimer;
     Collapse collapse1 = default!;
     Collapse core = default!;
     private CoreConfigService coreConfigService;
-    private string serverName;
+    private IConfigurationRoot configRoot;
+
     private bool sptFriendEnabled;
     private bool commandoEnabled;
+    private bool isServerRunning;
+
+    private string serverName;
+    private string serverPath;
 
     protected override void OnInitialized()
     {
         coreConfigService = new CoreConfigService(Configuration);
+        configRoot = new ConfigurationBuilder()
+            .AddJsonFile("config.json", optional: false, reloadOnChange: true)
+            .Build();
+
         LoadCoreConfig();
+        LoadServerPath();
         serverManager.OnOutputReceived += HandleServerOutput;
         UpdateServerStatus();
         updateTimer = new System.Threading.Timer(_ => InvokeAsync(UpdateServerStatus), null, 2000, 2000);
+    }
+
+    private void LoadServerPath()
+    {
+        serverPath = configRoot["ServerPath"];
+    }
+
+    private async Task SelectServerFolder()
+    {
+        var selectedPath = await JSRuntime.InvokeAsync<string>("showFolderPicker");
+        if (!string.IsNullOrEmpty(selectedPath))
+        {
+            serverPath = selectedPath;
+            UpdateServerPathInConfig(selectedPath);
+        }
+    }
+
+    private void UpdateServerPathInConfig(string path)
+    {
+        var json = File.ReadAllText("config.json");
+        using (var document = JsonDocument.Parse(json))
+        {
+            var root = document.RootElement;
+            var jsonObj = root.Clone();
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }))
+                {
+                    writer.WriteStartObject();
+
+                    foreach (var property in root.EnumerateObject())
+                    {
+                        if (property.NameEquals("ServerPath"))
+                        {
+                            writer.WriteString("ServerPath", path);
+                        }
+                        else
+                        {
+                            property.WriteTo(writer);
+                        }
+                    }
+
+                    writer.WriteEndObject();
+                }
+
+                var updatedJson = Encoding.UTF8.GetString(stream.ToArray());
+                File.WriteAllText("config.json", updatedJson);
+            }
+        }
     }
 
     private void SaveCoreConfig()
