@@ -12,7 +12,7 @@ jobs:
 
     env:
       SolutionName: SIT.Controller
-      CSProj: Source/SIT.Controller.csproj
+      CSProj: SIT.Controller.csproj
 
     steps:
       - name: Checkout
