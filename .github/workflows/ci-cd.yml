@@ -60,4 +60,4 @@ jobs:
           generate_release_notes: true
           files: SIT.Controller.zip
           tag_name: ${{ steps.extract-version.outputs.VERSION }}
-          name: Release ${{ steps.extract-version.outputs.VERSION }}
+          name: SIT.Controller ${{ steps.extract-version.outputs.VERSION }}
