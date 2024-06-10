@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <div align="center">
   <a href="https://github.com/stayintarkov/StayInTarkov.Client">
-    <img src="Assets/sit-logo-5.png" alt="Logo" height="240">
+    <img src="wwwroot/sit-logo-5.png" alt="Logo" height="240">
   </a>
 
   <h3 align="center">SIT.Controller</h3>
@@ -11,7 +11,7 @@
   <p align="center">
     Web server application designed for managing game servers remotely
     <br />
-    <a href="https://github.com/mihaicm93/SIT.Controller/releases"><strong>Download Latest Release »</strong></a>
+    <a href="https://github.com/mihaicm93/SIT.Controller/releases"><strong>Download Latest Release Â»</strong></a>
   </p>
 </div>
 
