@@ -6,37 +6,68 @@
 
 <div class="row">
     <div class="col-md-6 offset-md-1">
-    <section>
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="mt-5" style="background-color: #333; color: #fff; padding: 20px; border-radius: 10px; text-align: center;">
-            <h2>Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" style="background-color: #555; color: #fff; border-color: #555;" />
-                <label asp-for="Input.Email" class="form-label" style="color: #fff;">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" style="background-color: #555; color: #fff; border-color: #555;" />
-                <label asp-for="Input.Password" class="form-label" style="color: #fff;">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" style="background-color: #555; color: #fff; border-color: #555;" />
-                <label asp-for="Input.ConfirmPassword" class="form-label" style="color: #fff;">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-secondary" style="background-color: #555;">Register</button>
-            <style>
-                button#registerSubmit:hover {
-                    color: #999;
-                }
-            </style>
-        </form>
-    </section>
+        <section>
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="mt-5" style="background-color: #333; color: #fff; padding: 20px; border-radius: 10px; position: relative; text-align: center; @(!Model.RegistrationEnabled ? "filter: blur(2px);" : "")">
+                <h2>Create a new account.</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" style="background-color: #555; color: #fff; border-color: #555;" disabled="@(!Model.RegistrationEnabled)" />
+                    <label asp-for="Input.Email" class="form-label" style="color: #fff;">Email</label>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" style="background-color: #555; color: #fff; border-color: #555;" disabled="@(!Model.RegistrationEnabled)" />
+                    <label asp-for="Input.Password" class="form-label" style="color: #fff;">Password</label>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" style="background-color: #555; color: #fff; border-color: #555;" disabled="@(!Model.RegistrationEnabled)" />
+                    <label asp-for="Input.ConfirmPassword" class="form-label" style="color: #fff;">Confirm Password</label>
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-secondary" style="background-color: #555;" disabled="@(!Model.RegistrationEnabled)">Register</button>
+                <style>
+                    button#registerSubmit:hover {
+                        color: #999;
+                    }
+                </style>
+            </form>
+            @if (!Model.RegistrationEnabled)
+            {
+                <div class="overlay">
+                    <div class="overlay-text">Registration is currently disabled. Contact Server Administrator!</div>
+                </div>
+            }
+        </section>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+    .overlay {
+        position: fixed;
+        top: 10%;
+        left: 0;
+        width: 100%;
+        height: 80%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 2em;
+        z-index: 20;
+        background: none;
+    }
+
+    .overlay-text {
+        padding: 20px;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+    }
+</style>

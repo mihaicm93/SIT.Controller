@@ -47,7 +47,7 @@
                         <label class="col-md-2 col-form-label">Server Name</label>
                         <div class="col-md-10">
                             <!-- Bind the serverName property to the value attribute -->
-                            <InputText @bind-Value="serverName" style="margin-top: 15px;" />
+                            <InputText @bind-Value="serverName" style="margin-top: 5px;" />
                         </div>
                     </div>
                     <hr>
@@ -84,7 +84,7 @@
                         <div class="row mb-3">
                             <label class="col-md-2 col-form-label">Server Location</label>
                             <div class="col-md-10">
-                                <InputText @bind-Value="serverPath" Placeholder="(example: E:\SIT\Server)" style="margin-top: 15px;" />
+                                <InputText @bind-Value="serverPath" Placeholder="(example: E:\SIT\Server)" style="margin-top: 5px;" />
                             </div>
                         </div>
                     }
@@ -93,7 +93,7 @@
                         <div class="row mb-3">
                             <label class="col-md-2 col-form-label">Server Location</label>
                             <div class="col-md-10">
-                                <InputText @bind-Value="serverPath" disabled Placeholder="(example: E:\SIT\Server)" style="margin-top: 15px;" />
+                                <InputText @bind-Value="serverPath" disabled Placeholder="(example: E:\SIT\Server)" style="margin-top: 5px;" />
                                 <div class="alert alert-warning mt-2" role="alert" style="text-align:center">
                                     You are not allowed to change the Server Location except when connected locally via localhost or by setting it in the config.json file on the server machine.
                                 </div>

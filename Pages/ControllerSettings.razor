@@ -1,0 +1,35 @@
+﻿@page "/controllersettings"
+@inject RegistrationStateService RegistrationStateService
+
+<PageTitle>Controller Settings</PageTitle>
+
+<h1>Controller Settings</h1>
+
+<hr>
+<Card Color="CardColor.Light" Class="mb-4" Style="max-width:32rem;">
+    <CardHeader>REGISTRATIONS</CardHeader>
+    <CardBody>
+        <CardText>Here you can enable and disable the registration of new accounts</CardText>
+        <p> Currently Registrations are :
+        <button class="btn @(RegistrationStateService.RegistrationEnabled ? "btn-success" : "btn-danger")" @onclick="ToggleRegistration">
+            @if (RegistrationStateService.RegistrationEnabled)
+            {
+                <span>Enabled</span>
+            }
+            else
+            {
+                <span>Disabled</span>
+            }
+        </button>
+        </p>
+    </CardBody>
+</Card>
+<hr>
+
+
+@code {
+    private void ToggleRegistration()
+    {
+        RegistrationStateService.ToggleRegistration();
+    }
+}
