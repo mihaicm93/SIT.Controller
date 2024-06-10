@@ -20,6 +20,7 @@ namespace SIT.Controller.Controllers
         public class UserProfile
         {
             public Info info { get; set; }
+            public PMC pmc { get; set; }    
 
             public class Info
             {
@@ -30,6 +31,13 @@ namespace SIT.Controller.Controllers
                 public string password { get; set; }
                 public bool wipe { get; set; }
                 public string edition { get; set; }
+            }
+
+            public class PMC
+            {
+                public int Level { get; set; }
+                public string Side { get; set; }
+                public int Experience { get; set; }
             }
         }
 
@@ -79,6 +87,12 @@ namespace SIT.Controller.Controllers
                                 password = root.GetProperty("info").GetProperty("password").GetString(),
                                 wipe = root.GetProperty("info").GetProperty("wipe").GetBoolean(),
                                 edition = root.GetProperty("info").GetProperty("edition").GetString()
+                            },
+                            pmc = new UserProfile.PMC
+                            {
+                                Level = root.GetProperty("characters").GetProperty("pmc").GetProperty("Info").GetProperty("Level").GetInt32(),
+                                Side = root.GetProperty("characters").GetProperty("pmc").GetProperty("Info").GetProperty("Side").GetString(),
+                                Experience = root.GetProperty("characters").GetProperty("pmc").GetProperty("Info").GetProperty("Experience").GetInt32()
                             }
                         };
 

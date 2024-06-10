@@ -3,10 +3,10 @@
 @inject GameProfileService ServerProfileService
 @inject IJSRuntime JSRuntime
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@inject ServerManager serverManager
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using Microsoft.AspNetCore.Components.Forms
-@using System.IO
 
 <PageTitle>Server Profile</PageTitle>
 
@@ -17,7 +17,6 @@
 <div class="mb-3">
     <input type="text" @bind="username" style="max-width: 500px" placeholder="Enter your username" class="form-control" @oninput="UpdateSearchButtonState" />
     <button class="btn btn-primary mt-2" @onclick="SearchProfile" disabled="@IsSearchDisabled"><span class="oi oi-magnifying-glass" aria-hidden="true"></span>Search</button>
-
 </div>
 
 @if (profiles != null && profiles.Any())
@@ -29,27 +28,48 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title"><strong>Name:</strong>@profile.info.username</h5>
-                    <p class="card-text"><strong>ID:</strong> @profile.info.id</p>
+                    <hr>
                     <p class="card-text"><strong>Edition:</strong> @profile.info.edition</p>
-                    <p class="card-text"><strong>Wipe:</strong> @profile.info.wipe</p>
+                    <p class="card-text"><strong>Level:</strong> @profile.pmc.Level</p>
+                    <p class="card-text"><strong>Experience:</strong> @profile.pmc.Experience</p>
+                    <p class="card-text"><strong>Side:</strong> @profile.pmc.Side</p>
+                    <p class="card-text"><strong>ID:</strong> @profile.info.id</p>
                     <button class="btn btn-success" @onclick="() => DownloadProfile(profile)">
                         <span class="oi oi-cloud-download" aria-hidden="true"></span> Download
-                        </button>
-                    <button class="btn btn-primary" disabled @onclick="() => EditProfile(profile)">Edit</button>
+                    </button>
+                    <button class="btn btn-primary" @onclick="() => EditProfile(profile)" disabled>Edit</button>
                 </div>
             </div>
         }
     </div>
 }
-else if (profiles != null)
+else if (searched)
 {
-    <Alert Color="AlertColor.Warning" Dismissable="true"> <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>Could not find the searched profile</Alert>
+    <div class="alert alert-warning" role="alert">
+        <span class="oi oi-warning" aria-hidden="true"></span>
+        Could not find the searched profile.
+    </div>
 }
 
 <hr>
 
 <p>Upload a profile to the server</p>
 
+@if (isServerRunning)
+{
+    <div class="alert alert-warning">
+        <span class="oi oi-warning" aria-hidden="true"></span>
+        Server is running, changes might not be applied until the server is restarted.
+    </div>
+}
+
+@if (formatUnsuported == true & isFileSelected == false)
+{
+    <div class="alert alert-warning">
+        <span class="oi oi-warning" aria-hidden="true"></span>
+        Invalid file type. Please ensure you upload a .json file to use the Upload feature.
+    </div>
+}
 <div class="mb-3">
     <InputFile id="fileInput" OnChange="HandleFileSelected" />
 </div>
@@ -64,7 +84,7 @@ else if (profiles != null)
     <div>
         <h3>Edit Profile</h3>
         <textarea @bind="profileJson" class="form-control" rows="10"></textarea>
-        <button class="btn btn-primary mt-2" @onclick="SaveProfile">Save</button>
+        <button class="btn btn-primary mt-2" @onclick="SaveProfile" disabled="@isServerRunning">Save</button>
     </div>
 }
 
@@ -79,14 +99,17 @@ else if (profiles != null)
     private List<GameProfileService.UserProfile> profiles;
     private bool searched;
     private bool isFileSelected = false;
+    private bool isServerRunning;
+    private bool formatUnsuported = false;
     private GameProfileService.UserProfile editingProfile;
     private string profileJson;
     private string profilesDirectory;
     private IBrowserFile uploadedFile;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         profilesDirectory = Path.Combine(Configuration["ServerPath"], "user", "profiles");
+        isServerRunning = serverManager.IsServerRunning();
     }
 
     private async Task SearchProfile()
@@ -155,14 +178,26 @@ else if (profiles != null)
     {
         if (e.File != null)
         {
-            isFileSelected = true;
-            uploadedFile = e.File;
+            var extension = Path.GetExtension(e.File.Name).ToLowerInvariant();
+            if (extension == ".json")
+            {
+                isFileSelected = true;
+                uploadedFile = e.File;
+            }
+            else
+            {
+                Console.WriteLine("Invalid file type. Please upload a .json file.");
+                isFileSelected = false;
+                formatUnsuported = true;
+            }
         }
         else
         {
             isFileSelected = false;
         }
+        StateHasChanged();
     }
+
 
     private async Task UploadFile()
     {
@@ -203,7 +238,6 @@ else if (profiles != null)
     private void UpdateSearchButtonState(ChangeEventArgs e)
     {
         // This function will automatically be triggered due to @bind in the input
-        // No implementation needed here, just keeping it for explanation
     }
 
     private bool IsSearchDisabled => string.IsNullOrWhiteSpace(username);

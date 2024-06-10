@@ -42,12 +42,12 @@
         <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">Core Configuration</Button>
         <Collapse @ref="core">
             <Card>
-                <CardBody style="height: 400px;">
+                <CardBody style="height: auto; background-color: #ececec">
                     <div class="row mb-3">
                         <label class="col-md-2 col-form-label">Server Name</label>
                         <div class="col-md-10">
                             <!-- Bind the serverName property to the value attribute -->
-                            <InputText @bind-Value="serverName" />
+                            <InputText @bind-Value="serverName" style="margin-top: 15px;" />
                         </div>
                     </div>
                     <hr>
@@ -79,15 +79,29 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="row mb-3">
-                        <label class="col-md-2 col-form-label">Server Location</label>
-                        <div class="col-md-10">
-                            <!-- Button to locate server -->
-                            <button class="btn btn-secondary" @onclick="SelectServerFolder">Set Location</button><p>Current Location: @serverPath</p>
+                    @if (navigationManager.BaseUri.Contains("localhost"))
+                    {
+                        <div class="row mb-3">
+                            <label class="col-md-2 col-form-label">Server Location</label>
+                            <div class="col-md-10">
+                                <InputText @bind-Value="serverPath" Placeholder="(example: E:\SIT\Server)" style="margin-top: 15px;" />
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="row mb-3">
+                            <label class="col-md-2 col-form-label">Server Location</label>
+                            <div class="col-md-10">
+                                <InputText @bind-Value="serverPath" disabled Placeholder="(example: E:\SIT\Server)" style="margin-top: 15px;" />
+                                <div class="alert alert-warning mt-2" role="alert" style="text-align:center">
+                                    You are not allowed to change the Server Location except when connected locally via localhost or by setting it in the config.json file on the server machine.
+                                </div>
+                            </div>
+                        </div>
+                    }
                     <hr>
-                    <button class="btn btn-primary btn-sm" @onclick="SaveCoreConfig">Save</button>
+                    <button class="btn btn-secondary" @onclick="SaveCoreConfig">Save</button>
                 </CardBody>
             </Card>
         </Collapse>
@@ -96,7 +110,7 @@
 else
 {
     <div class="d-grid gap-2">
-        <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">
+        <Button Type="ButtonType.Button" Color="ButtonColor.Warning" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">
             Core Configuration is Disabled while the Server is running</Button>
     </div>
 }
@@ -157,7 +171,7 @@ else
         using (var document = JsonDocument.Parse(json))
         {
             var root = document.RootElement;
-            var jsonObj = root.Clone();
+            var jsonObj = JsonDocument.Parse(json).RootElement.Clone();
 
             using (var stream = new MemoryStream())
             {
@@ -191,6 +205,7 @@ else
         coreConfigService.UpdateField("serverName", serverName);
         coreConfigService.UpdateField("features.chatbotFeatures.sptFriendEnabled", sptFriendEnabled);
         coreConfigService.UpdateField("features.chatbotFeatures.commandoEnabled", commandoEnabled);
+        UpdateServerPathInConfig(serverPath);
     }
 
     private void EnableSptFriend()

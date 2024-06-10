@@ -54,6 +54,7 @@ namespace SIT.Controller.Controllers
             {
                 StopSingleServerProcess(process);
             }
+            OnOutputReceived?.Invoke("Server stopped");
         }
 
         // Attaches event handlers to capture output

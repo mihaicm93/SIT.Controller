@@ -1,0 +1,35 @@
+﻿@inherits LayoutComponentBase
+@inject ServerManager serverManager
+
+<button class="btn @(GetButtonColor())" disabled>
+    Server Status: @(GetServerStatus())
+</button>
+
+@code {
+    private bool IsServerRunning => serverManager.IsServerRunning();
+
+    private string GetButtonColor()
+    {
+        return IsServerRunning ? "btn-success" : "btn-danger";
+    }
+
+    private string GetServerStatus()
+    {
+        return IsServerRunning ? "Online" : "Offline";
+    }
+
+    protected override void OnInitialized()
+    {
+        serverManager.OnOutputReceived += UpdateServerStatus;
+    }
+
+    private void UpdateServerStatus(string output)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        serverManager.OnOutputReceived -= UpdateServerStatus;
+    }
+}

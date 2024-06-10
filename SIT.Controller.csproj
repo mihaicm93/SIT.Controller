@@ -5,6 +5,13 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-SIT.Controller-f59b9e3b-643f-4715-96d4-67c6fe68686f</UserSecretsId>
+		<RuntimeIdentifiers>linux-x64;win10-x64</RuntimeIdentifiers>
+		<EnableSdkContainerDebugging>True</EnableSdkContainerDebugging>
+		<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+		<DockerfileContext>.</DockerfileContext>
+		<ContainerRuntimeIdentifier>win10-x64</ContainerRuntimeIdentifier>
+		<ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:7.0</ContainerBaseImage>
+		<SatelliteResourceLanguages>none</SatelliteResourceLanguages>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -16,6 +23,13 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.18" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.12" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.18" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ContainerEnvironmentVariable Include="ASPNETCORE_HTTPS_PORTS">
+	    <Value>443</Value>
+	  </ContainerEnvironmentVariable>
+	  <ContainerPort Include="443" />
 	</ItemGroup>
 
 </Project>
