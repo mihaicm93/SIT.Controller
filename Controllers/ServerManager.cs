@@ -11,6 +11,9 @@ namespace SIT.Controller.Controllers
 {
     public class ServerManager
     {
+        public bool errorStartingServer { get; set; }
+
+
         public event Action<string>? OnOutputReceived;
 
         // Checks if the server process is currently running
@@ -18,6 +21,7 @@ namespace SIT.Controller.Controllers
         {
             return Process.GetProcessesByName("Aki.Server").Any();
         }
+
 
         // Starts the server if it's not already running
         public void StartServer(string path)
@@ -42,8 +46,17 @@ namespace SIT.Controller.Controllers
 
             Process serverProcess = new Process { StartInfo = processStartInfo };
             AttachOutputHandlers(serverProcess);
-            serverProcess.Start();
-            BeginReadingOutput(serverProcess);
+            try
+            {
+                serverProcess.Start();
+                BeginReadingOutput(serverProcess);
+                errorStartingServer = false;
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine($"Error selecting server folder: {ex.Message}");
+                errorStartingServer = true;
+            }
         }
 
         // Stops all running server processes

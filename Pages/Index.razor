@@ -12,6 +12,15 @@
 
 <SurveyPrompt Title="Tell us how this tool is helping you manage your server!" />
 
+@if (serverManager.errorStartingServer == true)
+{
+    <Alert Color="AlertColor.Danger">
+        <Icon Name="IconName.ExclamationTriangleFill" class="me-2"></Icon>
+        <strong>Configuration file not found</strong>. Please check config.json file! See <a href="https://github.com/mihaicm93/SIT.Controller/tree/main?tab=readme-ov-file#getting-started"> documentation</a>.
+    </Alert>
+}
+
+
 <div data-bs-theme="dark">
     <button class="btn @(isServerRunning ? "btn-danger" : "btn-success") btn-lg" @onclick="ToggleServer">
         <span class="oi @(isServerRunning ? "oi-media-stop" : "oi-media-play")" aria-hidden="true"></span>
