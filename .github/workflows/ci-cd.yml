@@ -1,7 +1,7 @@
 name: Build and Publish
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -43,17 +43,21 @@ jobs:
           $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("publish/SIT.Controller.dll").ProductVersion
           echo "::set-output name=VERSION::$version"
 
-      - name: Archive artifacts
+      - name: Zip published files
+        run: |
+          Compress-Archive -Path publish/* -DestinationPath SIT.Controller.zip
+
+      - name: Archive artifact
         uses: actions/upload-artifact@v3
         with:
-          name: published-files
-          path: publish
+          name: SIT.Controller
+          path: SIT.Controller.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           draft: true
           generate_release_notes: true
-          files: publish/*
+          files: SIT.Controller.zip
           tag_name: ${{ steps.extract-version.outputs.VERSION }}
           name: Release ${{ steps.extract-version.outputs.VERSION }}
