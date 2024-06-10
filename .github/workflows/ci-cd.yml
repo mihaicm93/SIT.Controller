@@ -28,6 +28,12 @@ jobs:
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.2
 
+      - name: Update version number
+        id: update-version
+        run: |
+          $version = (Get-Content -Path $env:CSProj -Raw) -replace '<Version>.*<\/Version>', "<Version>1.0.$env:GITHUB_RUN_NUMBER<\/Version>"
+          Set-Content -Path $env:CSProj -Value $version
+
       - name: Restore dependencies
         run: dotnet restore ${{ env.CSProj }}
 
@@ -35,7 +41,7 @@ jobs:
         run: dotnet build ${{ env.CSProj }} -c Release
 
       - name: Publish release
-        run: dotnet publish ${{ env.CSProj }} -c Release -f net7.0 -o publish
+        run: dotnet publish ${{ env.CSProj }} -c Release -r win-x64 --self-contained -o publish
 
       - name: Get version from DLL
         id: extract-version
