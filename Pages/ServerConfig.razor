@@ -22,7 +22,7 @@
         @(isServerRunning ? "Stop Server" : "Start Server")
     </button>
 
-    <Button Type="ButtonType.Button" Color="ButtonColor.Primary" @onclick="ToggleContentAsync"><span class="oi oi-terminal" aria-hidden="true"></span> Server Console</Button>
+    <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleContentAsync"><span class="oi oi-terminal" aria-hidden="true"></span> Server Console</Button>
     <Collapse @ref="collapse1" style="margin-top: 10px;">
         <Card>
             <CardBody style="height: 300px; overflow-y: auto; background-color: #333" id="consoleOutput">

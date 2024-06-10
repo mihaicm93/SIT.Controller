@@ -16,7 +16,7 @@
 
 <div class="mb-3">
     <input type="text" @bind="username" style="max-width: 500px" placeholder="Enter your username" class="form-control" @oninput="UpdateSearchButtonState" />
-    <button class="btn btn-primary mt-2" @onclick="SearchProfile" disabled="@IsSearchDisabled"><span class="oi oi-magnifying-glass" aria-hidden="true"></span>Search</button>
+    <button class="btn btn-secondary mt-2" @onclick="SearchProfile" disabled="@IsSearchDisabled"><span class="oi oi-magnifying-glass" aria-hidden="true"></span>Search</button>
 </div>
 
 @if (profiles != null && profiles.Any())
@@ -37,7 +37,7 @@
                     <button class="btn btn-success" @onclick="() => DownloadProfile(profile)">
                         <span class="oi oi-cloud-download" aria-hidden="true"></span> Download
                     </button>
-                    <button class="btn btn-primary" @onclick="() => EditProfile(profile)" disabled>Edit</button>
+                    <button class="btn btn-secondary" @onclick="() => EditProfile(profile)" disabled>Edit</button>
                 </div>
             </div>
         }
@@ -73,7 +73,7 @@ else if (searched)
 <div class="mb-3">
     <InputFile id="fileInput" OnChange="HandleFileSelected" />
 </div>
-<button class="btn btn-primary mt-2" @onclick="UploadFile" disabled="@(isFileSelected == false)">
+<button class="btn btn-secondary mt-2" @onclick="UploadFile" disabled="@(isFileSelected == false)">
     <span class="oi oi-cloud-upload" aria-hidden="true"></span> Upload
 </button>
 
@@ -84,7 +84,7 @@ else if (searched)
     <div>
         <h3>Edit Profile</h3>
         <textarea @bind="profileJson" class="form-control" rows="10"></textarea>
-        <button class="btn btn-primary mt-2" @onclick="SaveProfile" disabled="@isServerRunning">Save</button>
+        <button class="btn btn-secondary mt-2" @onclick="SaveProfile" disabled="@isServerRunning">Save</button>
     </div>
 }
 
