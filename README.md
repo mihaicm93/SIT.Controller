@@ -86,8 +86,9 @@ To get started with the application, follow these steps:
    ~~~
 
    You can change the port numbers and the Server Path as necessary. Note that the Server Path is required.
+   Http works fine, but if you don't have a SSL Cert installed it will crash. You'll need to install one or remove `https://* :7000` from the config
 
-4. **Run the SIT.Controller.exe**: Execute the `SIT.Controller.exe` file. On the machine where your game server (SIT.Server) is running, open a browser and enter `localhost:5000` or `localhost:7000` in the address bar to test if the application works.
+5. **Run the SIT.Controller.exe**: Execute the `SIT.Controller.exe` file. On the machine where your game server (SIT.Server) is running, open a browser and enter `localhost:5000` or `localhost:7000` in the address bar to test if the application works.
 
    - You will be redirected to the login/register page. This behavior is intended for the application running on localhost.
    - You can create an account from there if needed and test if the game server starts.
