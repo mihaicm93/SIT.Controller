@@ -52,18 +52,35 @@
             <i class="bi bi-floppy"></i>
             Update Password Requirements
         </button>
+        @if(showConfirmation)
+        {
+            <div class="alert alert-success mt-3" role="alert">
+                Password requirements updated successfully.
+            </div>
+        }
     </CardBody>
 </Card>
 <hr>
 
 @code {
+    private bool showConfirmation = false;
+
     private void ToggleRegistration()
     {
         RegistrationStateService.ToggleRegistration();
     }
 
-    private void UpdatePasswordOptions()
+    private async void UpdatePasswordOptions()
     {
         RegistrationStateService.UpdatePasswordOptions(RegistrationStateService.PasswordOptions);
+        await Confirmation();
+    }
+
+    private async Task Confirmation()
+    {
+        showConfirmation = true;
+
+        await Task.Delay(3000);
+        showConfirmation = false;
     }
 }
