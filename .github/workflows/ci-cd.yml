@@ -55,16 +55,12 @@ jobs:
           name: SIT.Controller
           path: SIT.Controller.zip
 
-      - name: Set release version
-        id: set-release-version
-        run: echo "##vso[task.setvariable variable=release_version]$(echo ${{ steps.update-version.outputs.version }} | cut -c 8-)"
-
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.set-release-version.outputs.release_version }}
+          tag_name: v1.0.${{ github.run_number }}
           generate_release_notes: true
-          name: SIT.Controller-${{ env.Platform }}-${{ steps.set-release-version.outputs.release_version }}
+          name: SIT.Controller-${{ env.Platform }}-1.0.${{ github.run_number }}
           draft: true
           files: SIT.Controller.zip
