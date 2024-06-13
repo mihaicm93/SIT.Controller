@@ -34,6 +34,7 @@ jobs:
         run: |
           $version = (Get-Content -Path $env:CSProj -Raw) -replace '<Version>.*<\/Version>', "<Version>1.0.${{ github.run_number }}<\/Version>"
           Set-Content -Path $env:CSProj -Value $version
+          echo "Updated version is: 1.0.${{ github.run_number }}"
 
       - name: Restore dependencies
         run: dotnet restore ${{ env.CSProj }}
