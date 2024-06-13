@@ -29,7 +29,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddSingleton<ServerManager>();
 builder.Services.AddSingleton<RegistrationStateService>();
-builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddSingleton<WeatherConfigService>();
 builder.Services.AddSingleton<GameProfileService>();
 
 var app = builder.Build();

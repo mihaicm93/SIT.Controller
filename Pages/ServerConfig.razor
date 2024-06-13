@@ -1,6 +1,8 @@
 ﻿@page "/serverconfig"
 @inject Controllers.ServerManager serverManager
 @inject NavigationManager navigationManager
+@inject WeatherConfigService weatherConfigService
+
 @inject IJSRuntime JSRuntime
 @inject IConfiguration Configuration
 @implements IDisposable
@@ -124,9 +126,37 @@ else
 }
 <hr>
 
-<div class="d-grid gap-2">
-</div>
-
+@if (@isServerRunning == false)
+{
+    <div class="d-grid gap-2">
+        <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleOtherContentAsync" disabled="@isServerRunning">Other Configuration</Button>
+        <Collapse @ref="other">
+            <Card>
+                <CardBody style="height: auto; background-color: #ececec">
+                    <div class="row mb-3">
+                        <label class="col-md-2 col-form-label">Winter</label>
+                        <div class="col-md-10">
+                            <button class="btn @(forceWinterEventEnabled ? "btn-secondary" : "btn-success")" @onclick="EnableForceWinterEvent" disabled="@forceWinterEventEnabled">
+                                <i class="bi bi-snow"></i> Enable
+                            </button>
+                            <button class="btn @(forceWinterEventEnabled ? "btn-danger" : "btn-secondary")" @onclick="DisableForceWinterEvent" disabled="@(forceWinterEventEnabled ? false : true)">
+                                <i class="bi bi-brightness-high"></i> Disable
+                            </button>
+                        </div>
+                    </div>
+                </CardBody>
+            </Card>
+        </Collapse>
+    </div>
+}
+else
+{
+    <div class="d-grid gap-2">
+        <Button Type="ButtonType.Button" Color="ButtonColor.Warning" @onclick="ToggleOtherContentAsync" disabled="@isServerRunning">
+            Core Configuration is Disabled while the Server is running
+        </Button>
+    </div>
+}
 <hr>
 
 @code {
@@ -134,12 +164,14 @@ else
     private System.Threading.Timer updateTimer;
     Collapse collapse1 = default!;
     Collapse core = default!;
+    Collapse other = default!;
     private CoreConfigService coreConfigService;
     private IConfigurationRoot configRoot;
 
     private bool sptFriendEnabled;
     private bool commandoEnabled;
     private bool isServerRunning;
+    private bool forceWinterEventEnabled;
     private bool isConfigFileMissing = false;
 
     private string serverName;
@@ -155,6 +187,7 @@ else
                 .Build();
 
             LoadCoreConfig();
+            LoadWeatherConfig();
             LoadServerPath();
             serverManager.OnOutputReceived += HandleServerOutput;
             UpdateServerStatus();
@@ -231,7 +264,13 @@ else
         coreConfigService.UpdateField("serverName", serverName);
         coreConfigService.UpdateField("features.chatbotFeatures.sptFriendEnabled", sptFriendEnabled);
         coreConfigService.UpdateField("features.chatbotFeatures.commandoEnabled", commandoEnabled);
+        SaveWeatherConfig();
         UpdateServerPathInConfig(serverPath);
+    }
+
+    private void SaveWeatherConfig()
+    {
+        weatherConfigService.UpdateField("forceWinterEvent", forceWinterEventEnabled);
     }
 
     private void EnableSptFriend()
@@ -256,6 +295,18 @@ else
     {
         commandoEnabled = false;
         SaveCoreConfig();
+    }
+
+    private void EnableForceWinterEvent()
+    {
+        forceWinterEventEnabled = true;
+        SaveWeatherConfig();
+    }
+
+    private void DisableForceWinterEvent()
+    {
+        forceWinterEventEnabled = false;
+        SaveWeatherConfig();
     }
 
     private void UpdateServerStatus()
@@ -309,9 +360,21 @@ else
         }
     }
 
+    private void LoadWeatherConfig()
+    {
+        var weatherConfig = weatherConfigService.LoadWeatherConfig();
+        if (weatherConfig != null)
+        {
+            forceWinterEventEnabled = weatherConfig.ForceWinterEvent;
+        }
+    }
+
     private async Task ToggleContentAsync() => await collapse1.ToggleAsync();
 
     private async Task ToggleCoreContentAsync() => await core.ToggleAsync();
+
+    private async Task ToggleOtherContentAsync() => await other.ToggleAsync();
+
 
     public void Dispose()
     {
