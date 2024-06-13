@@ -14,6 +14,8 @@
 
 <p>This page lets you view and interact with your game server profile.</p>
 
+<SurveyPrompt Title="Tell us how this tool is helping you manage your server!" />
+
 <div class="mb-3">
     <input type="text" @bind="username" style="max-width: 500px" placeholder="Enter your username" class="form-control" @oninput="UpdateSearchButtonState" />
     <button class="btn btn-secondary mt-2" @onclick="SearchProfile" disabled="@IsSearchDisabled"><span class="oi oi-magnifying-glass" aria-hidden="true"></span>Search</button>
