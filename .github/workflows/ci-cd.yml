@@ -35,6 +35,8 @@ jobs:
           $version = (Get-Content -Path $env:CSProj -Raw) -replace '<Version>.*<\/Version>', "<Version>1.0.${{ github.run_number }}<\/Version>"
           Set-Content -Path $env:CSProj -Value $version
           echo "Updated version is: 1.0.${{ github.run_number }}"
+          echo "::set-output name=version::$version"
+
 
       - name: Restore dependencies
         run: dotnet restore ${{ env.CSProj }}
@@ -63,3 +65,4 @@ jobs:
           name: SIT.Controller-${{ env.Platform }}-${{ steps.update-version.outputs.version }}
           draft: true
           files: SIT.Controller.zip
+
