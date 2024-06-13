@@ -64,6 +64,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.extract-version.outputs.VERSION }}
+          generate_release_notes: true
           name: SIT.Controller-${{ env.Platform }}-${{ steps.extract-version.outputs.VERSION }}
-          draft: false
+          draft: true
           files: SIT.Controller.zip
