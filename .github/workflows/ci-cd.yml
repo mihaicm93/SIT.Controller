@@ -45,12 +45,6 @@ jobs:
       - name: Publish release
         run: dotnet publish ${{ env.CSProj }} -c Release -r ${{ env.Platform }} --self-contained -o publish
 
-      - name: Get version from DLL
-        id: extract-version
-        run: |
-          $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("publish/SIT.Controller.dll").ProductVersion
-          echo "::set-output name=VERSION::$version"
-
       - name: Zip published files
         run: Compress-Archive -Path publish/* -DestinationPath SIT.Controller.zip
 
@@ -64,8 +58,8 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.extract-version.outputs.VERSION }}
+          tag_name: v${{ steps.update-version.outputs.version }}
           generate_release_notes: true
-          name: SIT.Controller-${{ env.Platform }}-${{ steps.extract-version.outputs.VERSION }}
+          name: SIT.Controller-${{ env.Platform }}-${{ steps.update-version.outputs.version }}
           draft: true
           files: SIT.Controller.zip
