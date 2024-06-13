@@ -47,13 +47,13 @@ jobs:
         run: dotnet publish ${{ env.CSProj }} -c Release -r ${{ env.Platform }} --self-contained -o publish
 
       - name: Zip published files
-        run: Compress-Archive -Path publish/* -DestinationPath SIT.Controller.zip
+        run: Compress-Archive -Path publish/* -DestinationPath SIT.Controller-${{ env.Platform }}.zip
 
       - name: Archive artifact
         uses: actions/upload-artifact@v3
         with:
           name: SIT.Controller
-          path: SIT.Controller.zip
+          path: SIT.Controller-${{ env.Platform }}.zip
 
       - name: Create Release
         id: create_release
@@ -61,6 +61,6 @@ jobs:
         with:
           tag_name: v1.0.${{ github.run_number }}
           generate_release_notes: true
-          name: SIT.Controller-${{ env.Platform }}-1.0.${{ github.run_number }}
+          name: SIT.Controller-1.0.${{ github.run_number }}
           draft: true
-          files: SIT.Controller.zip
+          files: SIT.Controller-${{ env.Platform }}.zip
