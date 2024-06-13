@@ -13,6 +13,7 @@ jobs:
     env:
       SolutionName: SIT.Controller
       CSProj: SIT.Controller.csproj
+      Platform: 'win-x64'
 
     steps:
       - name: Checkout
@@ -31,7 +32,7 @@ jobs:
       - name: Update version number
         id: update-version
         run: |
-          $version = (Get-Content -Path $env:CSProj -Raw) -replace '<Version>.*<\/Version>', "<Version>1.0.$env:GITHUB_RUN_NUMBER<\/Version>"
+          $version = (Get-Content -Path $env:CSProj -Raw) -replace '<Version>.*<\/Version>', "<Version>1.0.${{ github.run_number }}<\/Version>"
           Set-Content -Path $env:CSProj -Value $version
 
       - name: Restore dependencies
@@ -41,7 +42,7 @@ jobs:
         run: dotnet build ${{ env.CSProj }} -c Release
 
       - name: Publish release
-        run: dotnet publish ${{ env.CSProj }} -c Release -r win-x64 --self-contained -o publish
+        run: dotnet publish ${{ env.CSProj }} -c Release -r ${{ env.Platform }} --self-contained -o publish
 
       - name: Get version from DLL
         id: extract-version
@@ -50,8 +51,7 @@ jobs:
           echo "::set-output name=VERSION::$version"
 
       - name: Zip published files
-        run: |
-          Compress-Archive -Path publish/* -DestinationPath SIT.Controller.zip
+        run: Compress-Archive -Path publish/* -DestinationPath SIT.Controller.zip
 
       - name: Archive artifact
         uses: actions/upload-artifact@v3
@@ -60,10 +60,10 @@ jobs:
           path: SIT.Controller.zip
 
       - name: Create Release
+        id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          draft: true
-          generate_release_notes: true
+          tag_name: v${{ steps.extract-version.outputs.VERSION }}
+          name: SIT.Controller-${{ env.Platform }}-${{ steps.extract-version.outputs.VERSION }}
+          draft: false
           files: SIT.Controller.zip
-          tag_name: ${{ steps.extract-version.outputs.VERSION }}
-          name: SIT.Controller ${{ steps.extract-version.outputs.VERSION }}
