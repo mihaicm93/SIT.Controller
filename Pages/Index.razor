@@ -19,7 +19,29 @@
     </Alert>
 }
 
+<!-- Confirmation Modal for Server Shutdown -->
+@if (showShutdownModal)
+{
+    <div class="modal show d-block" style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px);" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: #F5F5F5; margin-top: 150px">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Server Shutdown</h5>
+                    <button type="button" class="btn-close" @onclick="CancelShutdown"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to stop the server?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CancelShutdown">Cancel</button>
+                    <button type="button" class="btn btn-danger" @onclick="StopServer">Stop Server</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
+<!-- Server Control Buttons -->
 <div data-bs-theme="dark">
     <button class="btn @(isServerRunning ? "btn-danger" : "btn-success") btn-lg" @onclick="ToggleServer">
         <span class="oi @(isServerRunning ? "oi-media-stop" : "oi-media-play")" aria-hidden="true"></span>
@@ -39,13 +61,12 @@
     </Collapse>
 </div>
 
-
 @code {
     private bool isServerRunning;
     private List<string> consoleOutput = new List<string>();
     private System.Threading.Timer updateTimer;
     Collapse collapse1 = default!;
-
+    private bool showShutdownModal = false;
 
     protected override void OnInitialized()
     {
@@ -64,14 +85,15 @@
     {
         output = Controllers.ServerManager.CleanInput(output);
         consoleOutput.Insert(0, output);
-        InvokeAsync(StateHasChanged); 
+        InvokeAsync(StateHasChanged);
     }
 
     private void ToggleServer()
     {
         if (isServerRunning)
         {
-            serverManager.StopServer();
+            // Show the shutdown confirmation modal
+            showShutdownModal = true;
         }
         else
         {
@@ -81,12 +103,23 @@
 
             var serverPath = config["ServerPath"];
             serverManager.StartServer(serverPath);
+            UpdateServerStatus();
         }
-        UpdateServerStatus();
     }
 
     private async Task ToggleContentAsync() => await collapse1.ToggleAsync();
 
+    private void CancelShutdown()
+    {
+        showShutdownModal = false;
+    }
+
+    private void StopServer()
+    {
+        serverManager.StopServer();
+        UpdateServerStatus();
+        showShutdownModal = false;
+    }
 
     public void Dispose()
     {
