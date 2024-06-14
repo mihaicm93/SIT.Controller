@@ -1,0 +1,52 @@
+﻿/* LoginDisplay.css */
+
+.login-display {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.authorized-content, .not-authorized-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.manage-account, .logout-form, .register-button, .login-button {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+
+@media (max-width: 809px) {
+    .user-name, .logout-button span, .register-button span, .login-button span {
+        display: none;
+    }
+}
+
+#serverstatus {
+    display: flex;
+    align-items: center;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+    .btn span {
+        white-space: nowrap;
+    }
+
+    .btn i {
+        margin-right: 0.25rem;
+    }
