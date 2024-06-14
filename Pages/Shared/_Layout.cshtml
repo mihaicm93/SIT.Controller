@@ -49,26 +49,24 @@
     </header>
 
     <div class="container">
-        <div class="col-md-12 offset-md-2">
+        <div class="row justify-content-center align-items-center">
             <partial name="_CookieConsentPartial" optional />
-            <main role="main" class="pb-1" style="color: white;">
+            <main role="main" class="pb-1 text-center" style="color: white;">
                 @RenderBody()
             </main>
         </div>
     </div>
 
-    <footer style="color: #888;">
+    <footer class="fixed-bottom" style="background-color: #222; color: #888;">
         <div class="container">
-
             &copy; 2024 - SIT.Controller - Developed by Mihai
             @{
                 var foundPrivacy = Url.Page("/Privacy", new { area = "" });
             }
             @if (foundPrivacy != null)
             {
-                <a asp-area="" asp-page="/Privacy">Privacy</a>
+                <a asp-area="" asp-page="/Privacy" style="color: #888;">Privacy</a>
             }
-
         </div>
     </footer>
 

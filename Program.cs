@@ -1,22 +1,24 @@
-using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
-using SIT.Controller.Areas.Identity;
-using SIT.Controller.Controllers;
-using SIT.Controller.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SIT.Controller.Areas.Identity;
+using SIT.Controller.Controllers;
+using SIT.Controller.Data;
+using System;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Set base path and add configuration
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
 builder.Configuration.AddJsonFile("config.json", optional: false, reloadOnChange: true);
 
-// Add services to the container.
+// Add services to the container
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
@@ -33,6 +35,10 @@ builder.Services.AddSingleton<WeatherConfigService>();
 builder.Services.AddSingleton<RegistrationStateService>();
 builder.Services.AddSingleton<GameProfileService>();
 
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<ILocalhostService, LocalhostService>();
+
+// Create the application
 var app = builder.Build();
 
 // Apply any pending migrations on startup
@@ -51,7 +57,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -64,12 +70,20 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Register custom middleware to make Localhost have Administrator rights
+app.UseLocalhostMiddleware();
+
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
+// Ensure roles exist
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();

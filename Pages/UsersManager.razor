@@ -5,6 +5,7 @@
 @inject UserManager<IdentityUser> UserManager
 @inject RoleManager<IdentityRole> RoleManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalhostService LocalhostService
 
 <PageTitle>Users Manager</PageTitle>
 
@@ -71,7 +72,6 @@
     </div>
 }
 
-
 @code {
     private List<IdentityUser> users;
     private Dictionary<string, List<string>> userRoles = new Dictionary<string, List<string>>();
@@ -106,12 +106,22 @@
     // Show the role edit dialog
     private async Task ShowEditRolesDialog(IdentityUser user)
     {
-        selectedUser = user;
-        var userRoles = await UserManager.GetRolesAsync(user);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var currentUser = authState.User;
 
-        foreach (var role in allRoles)
+        if (currentUser.IsInRole("Administrator") || currentUser.IsInRole("Superuser") || LocalhostService.IsLocalhost())
         {
-            role.IsSelected = userRoles.Contains(role.Name);
+            selectedUser = user;
+            var userRoles = await UserManager.GetRolesAsync(user);
+
+            foreach (var role in allRoles)
+            {
+                role.IsSelected = userRoles.Contains(role.Name);
+            }
+        }
+        else
+        {
+            Console.Error.WriteLine("Access denied. User does not have the required roles.");
         }
     }
 
