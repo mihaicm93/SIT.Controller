@@ -93,20 +93,20 @@ To get started with the application, follow these steps:
    - **Superuser**: Similar to Administrator but with restricted capabilities.
    - **User**: Default role assigned to every new account.
 
-5. **Granting Administrator Privileges**:
+5. **Run the SIT.Controller.exe**: Execute the `SIT.Controller.exe` file. On the machine where your game server (SIT.Server) is running, open a browser and enter `localhost:5000` or `localhost:7000` in the address bar to test if the application works.
+
+   - You will skip the login/register page. This behavior is intended for the application running on localhost.
+       - When a connection is done from outside of the machine the SIT.Controller is running from, they will be force to Login/Register before they can view the contents of the Web App.
+   - You can create an account from there if needed and test if the game server starts.
+   - Ensure that the ports (5000 or 7000) or any other chosen ports are open and accessible from a different machine than the one running the SIT.Server. You should be able to connect to the web app using `VPS-IP:5000` or `VPS-IP:7000`.
+
+6. **Granting Administrator Privileges**:
    - **Register an Account**: Create a new account on the application.
    - **Localhost Access**: Connect via localhost to grant Administrator privileges.
        - On the machine where your game server (SIT.Server) is running, open a browser and enter `localhost:5000` or `localhost:7000` in the address bar.
    - **Access User Manager**: Navigate to the User Manager section.
    - **Edit User Roles**: Locate your profile and click "Edit".
    - **Assign Administrator Role**: Check the Administrator role box and save changes.
-
-
-6. **Run the SIT.Controller.exe**: Execute the `SIT.Controller.exe` file. On the machine where your game server (SIT.Server) is running, open a browser and enter `localhost:5000` or `localhost:7000` in the address bar to test if the application works.
-
-   - You will be redirected to the login/register page. This behavior is intended for the application running on localhost.
-   - You can create an account from there if needed and test if the game server starts.
-   - Ensure that the ports (5000 or 7000) or any other chosen ports are open and accessible from a different machine than the one running the SIT.Server. You should be able to connect to the web app using `VPS-IP:5000` or `VPS-IP:7000`.
 
 
 ## License Summary
