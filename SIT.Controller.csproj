@@ -28,6 +28,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Blazor.Bootstrap" Version="2.2.0" />
+		<PackageReference Include="Blazorise.DataGrid" Version="1.5.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.18" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.18" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.18" />
