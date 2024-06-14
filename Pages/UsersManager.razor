@@ -1,0 +1,192 @@
+﻿@page "/usersmanager"
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Users Manager</PageTitle>
+
+<h1>Web Application User Manager</h1>
+
+<p>This page allows you to manage users' access to the web application and remove them.</p>
+
+<!-- User table -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (users != null)
+        {
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@string.Join(", ", userRoles[user.Id])</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => ShowEditRolesDialog(user)">Edit Roles</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteUser(user)">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<!-- Role edit modal -->
+@if (selectedUser != null)
+{
+    <div class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Roles for @selectedUser.Email</h5>
+                    <button type="button" class="btn-close" @onclick="CloseEditRolesDialog"></button>
+                </div>
+                <div class="modal-body">
+                    @foreach (var role in allRoles)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" @bind="role.IsSelected" @bind:event="onchange" />
+                            <label class="form-check-label">@role.Name</label>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseEditRolesDialog">Cancel</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveRoles">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<IdentityUser> users;
+    private Dictionary<string, List<string>> userRoles = new Dictionary<string, List<string>>();
+    private IdentityUser selectedUser;
+    private List<RoleViewModel> allRoles;
+
+    // Initialization method
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Load all users
+            users = await UserManager.Users.ToListAsync();
+
+            // Load all roles and prepare the view model
+            allRoles = await RoleManager.Roles.Select(role => new RoleViewModel { Name = role.Name }).ToListAsync();
+
+            // Load roles for each user
+            foreach (var user in users)
+            {
+                var roles = await UserManager.GetRolesAsync(user);
+                userRoles[user.Id] = roles.ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle initialization errors
+            Console.Error.WriteLine($"Error loading users and roles: {ex.Message}");
+        }
+    }
+
+    // Show the role edit dialog
+    private async Task ShowEditRolesDialog(IdentityUser user)
+    {
+        selectedUser = user;
+        var userRoles = await UserManager.GetRolesAsync(user);
+
+        foreach (var role in allRoles)
+        {
+            role.IsSelected = userRoles.Contains(role.Name);
+        }
+    }
+
+    // Close the role edit dialog
+    private void CloseEditRolesDialog()
+    {
+        selectedUser = null;
+    }
+
+    // Save the roles for the selected user
+    private async Task SaveRoles()
+    {
+        try
+        {
+            var userRoles = await UserManager.GetRolesAsync(selectedUser);
+            var rolesToAdd = allRoles.Where(r => r.IsSelected && !userRoles.Contains(r.Name)).Select(r => r.Name).ToList();
+            var rolesToRemove = userRoles.Where(r => !allRoles.Any(ar => ar.IsSelected && ar.Name == r)).ToList();
+
+            if (rolesToAdd.Any())
+            {
+                await UserManager.AddToRolesAsync(selectedUser, rolesToAdd);
+            }
+
+            if (rolesToRemove.Any())
+            {
+                await UserManager.RemoveFromRolesAsync(selectedUser, rolesToRemove);
+            }
+
+            // Update local userRoles dictionary
+            this.userRoles[selectedUser.Id] = (await UserManager.GetRolesAsync(selectedUser)).ToList();
+
+            selectedUser = null;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            // Handle save errors
+            Console.Error.WriteLine($"Error saving roles: {ex.Message}");
+        }
+    }
+
+    // Delete the specified user
+    private async Task DeleteUser(IdentityUser user)
+    {
+        try
+        {
+            var result = await UserManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                // Check if the user is signed in
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var currentUser = authState.User;
+
+                if (SignInManager.IsSignedIn(currentUser) && currentUser.Identity.Name == user.UserName)
+                {
+                    // Sign out the user
+                    await SignInManager.SignOutAsync();
+                }
+
+                users.Remove(user);
+                userRoles.Remove(user.Id);
+                StateHasChanged();
+            }
+            else
+            {
+                // Handle errors
+                Console.Error.WriteLine($"Error deleting user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.Error.WriteLine($"Exception deleting user: {ex.Message}");
+        }
+    }
+
+    // View model for roles
+    private class RoleViewModel
+    {
+        public string Name { get; set; }
+        public bool IsSelected { get; set; }
+    }
+}
