@@ -88,7 +88,21 @@ To get started with the application, follow these steps:
    You can change the port numbers and the Server Path as necessary. Note that the Server Path is required.
    Http works fine, but if you don't have a SSL Cert installed it will crash. You'll need to install one or remove `https://* :7000` from the config
 
-5. **Run the SIT.Controller.exe**: Execute the `SIT.Controller.exe` file. On the machine where your game server (SIT.Server) is running, open a browser and enter `localhost:5000` or `localhost:7000` in the address bar to test if the application works.
+4. **User Roles**:
+   - **Administrator**: Users with full access rights, capable of managing other users and settings. Grant Administrator privileges by connecting via localhost.
+   - **Superuser**: Similar to Administrator but with restricted capabilities.
+   - **User**: Default role assigned to every new account.
+
+5. **Granting Administrator Privileges**:
+   - **Register an Account**: Create a new account on the application.
+   - **Localhost Access**: Connect via localhost to grant Administrator privileges.
+       - On the machine where your game server (SIT.Server) is running, open a browser and enter `localhost:5000` or `localhost:7000` in the address bar.
+   - **Access User Manager**: Navigate to the User Manager section.
+   - **Edit User Roles**: Locate your profile and click "Edit".
+   - **Assign Administrator Role**: Check the Administrator role box and save changes.
+
+
+6. **Run the SIT.Controller.exe**: Execute the `SIT.Controller.exe` file. On the machine where your game server (SIT.Server) is running, open a browser and enter `localhost:5000` or `localhost:7000` in the address bar to test if the application works.
 
    - You will be redirected to the login/register page. This behavior is intended for the application running on localhost.
    - You can create an account from there if needed and test if the game server starts.
