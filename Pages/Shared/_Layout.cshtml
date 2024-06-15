@@ -1,7 +1,3 @@
-@using Microsoft.AspNetCore.Hosting
-@using Microsoft.AspNetCore.Mvc.ViewEngines
-@inject IWebHostEnvironment Environment
-@inject ICompositeViewEngine Engine
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,31 +17,18 @@
         <link rel="stylesheet" href="~/Identity/css/site.css" asp-append-version="true" />
     </environment>
 </head>
-<body>
+<body style="background: linear-gradient(to bottom right, #191919, #585858 )">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark">
             <div class="container">
                 <a class="navbar-brand" href="~/">SIT.Controller</a>
                 </button>
-                    @{
-                        var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
-                    }
-                    @if (result.Success)
-                    {
-                        await Html.RenderPartialAsync("_LoginPartial");
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("The default Identity UI layout requires a partial view '_LoginPartial' " +
-                        "usually located at '/Pages/_LoginPartial' or at '/Views/Shared/_LoginPartial' to work. Based on your configuration " +
-                        $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
-                    }
-                </div>
+                @await Html.PartialAsync("_LoginPartial")
             </div>
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container full-height">
         <div class="row justify-content-center align-items-center">
             <partial name="_CookieConsentPartial" optional />
             <main role="main" class="pb-1 text-center" style="color: white;">
@@ -57,10 +40,10 @@
     <footer class="fixed-bottom" style="background-color: #555; color: #999; opacity: 20%; font-size: 12px; text-align: center; letter-spacing: 1px; backdrop-filter: blur(2px);">
         <div class="container">
             <a href="https://github.com/mihaicm93/SIT.Controller" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-light d-inline-block py-1">
-                &copy; 2024 - Created by Mihai</a>
+                &copy; 2024 - Created by Mihai
+            </a>
         </div>
     </footer>
-
 
     <environment include="Development">
         <script src="~/Identity/lib/jquery/dist/jquery.js"></script>

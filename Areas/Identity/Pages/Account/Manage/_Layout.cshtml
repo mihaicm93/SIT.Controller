@@ -1,5 +1,5 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
@@ -8,20 +8,21 @@
         Layout = "/Areas/Identity/Pages/_Layout.cshtml";
     }
 }
-
+<div style="margin-top:50px">
 <h1>Manage your account</h1>
 
 <div>
     <h2>Change your account settings</h2>
     <hr />
-    <div class="row">
+    <div class="row justify-content-center center-content" style="margin-top: 20px; vertical-align:central">
         <div class="col-sm-2">
             <partial name="_ManageNav" />
         </div>
-        <div class="col-md-9">
+        <div class="col-md-8 offset-md-2">
             @RenderBody()
         </div>
     </div>
+</div>
 </div>
 
 @section Scripts {
