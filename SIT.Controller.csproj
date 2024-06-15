@@ -16,7 +16,9 @@
 		<ApplicationIcon>wwwroot\sit-icon.ico</ApplicationIcon>
 		<SignAssembly>False</SignAssembly>
 		<Company></Company>
-		<Copyright>Mihai</Copyright>
+		<Copyright>
+			© Mihai, 2024. All rights reserved.
+		</Copyright>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/mihaicm93/SIT.Controlle</RepositoryUrl>
 		<PackageLicenseFile>Licence.txt</PackageLicenseFile>

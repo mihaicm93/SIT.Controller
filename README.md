@@ -135,3 +135,8 @@ Please refer to the [full license text](https://creativecommons.org/licenses/by-
 ## Contact
 
 For inquiries, please contact Mihai at cristian@mihaimuresan.com or Discord mihai_cristian
+
+
+## Copyright
+
+© Mihai, 2024. All rights reserved.
