@@ -1,11 +1,24 @@
-﻿﻿<div class="alert alert-secondary mt-4">
-    <span class="oi oi-pencil me-2" aria-hidden="true"></span>
-    <strong>@Title</strong>
-
+﻿<div class="alert alert-secondary mt-4 dark-mode">
     <span class="text-nowrap">
-        <a target="_blank" class="font-weight-bold link-dark" href="https://docs.google.com/forms/d/e/1FAIpQLSe1JfwxbN1cyjxZHIpxog4EOWKpJfb70hcTQVePGIV49oO2Dg/viewform?usp=sf_link">survey</a>
+        <a target="_blank" class="font-weight-bold" href="https://docs.google.com/forms/d/e/1FAIpQLSe1JfwxbN1cyjxZHIpxog4EOWKpJfb70hcTQVePGIV49oO2Dg/viewform?usp=sf_link">
+            <strong>@Title</strong>
+        </a>
     </span>
 </div>
+
+<style>
+    .alert {
+        background-color: #212529;
+        color: white;
+        border-color: #191919;
+        max-width: 550px;
+        text-align: center;
+    }
+    .alert a{
+        color: white;
+    }
+</style>
+
 
 @code {
     // Demonstrates how a parent component can supply parameters

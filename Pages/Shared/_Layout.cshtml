@@ -21,7 +21,7 @@
         <link rel="stylesheet" href="~/Identity/css/site.css" asp-append-version="true" />
     </environment>
 </head>
-<body style="background: radial-gradient(circle, #000, #444);">
+<body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark">
             <div class="container">
@@ -54,18 +54,13 @@
         </div>
     </div>
 
-    <footer class="fixed-bottom" style="background-color: #222; color: #888;">
+    <footer class="fixed-bottom" style="background-color: #555; color: #999; opacity: 20%; font-size: 12px; text-align: center; letter-spacing: 1px; backdrop-filter: blur(2px);">
         <div class="container">
-            &copy; 2024 - SIT.Controller - Developed by Mihai
-            @{
-                var foundPrivacy = Url.Page("/Privacy", new { area = "" });
-            }
-            @if (foundPrivacy != null)
-            {
-                <a asp-area="" asp-page="/Privacy" style="color: #888;">Privacy</a>
-            }
+            <a href="https://github.com/mihaicm93/SIT.Controller" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-light d-inline-block py-1">
+                &copy; 2024 - Created by Mihai</a>
         </div>
     </footer>
+
 
     <environment include="Development">
         <script src="~/Identity/lib/jquery/dist/jquery.js"></script>

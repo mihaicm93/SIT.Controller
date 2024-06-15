@@ -14,10 +14,10 @@
 <p>This page allows you to manage users' access to the web application and remove them.</p>
 
 <!-- User table -->
-<div class="table-responsive" style="border-radius: 10px; overflow: hidden;">
-    <table class="table table-striped table-hover" style="border-radius: 10px; ">
-        <thead class="thead-light">
-            <tr style="background-color: #CFCFCF; text-align: center;">
+<div class="table-responsive" style="border-radius: 10px; overflow: hidden; opacity: 60%; backdrop-filter:blur(2px)">
+    <table class="table table-striped table-dark table-hover" style="border-radius: 10px; border-color: #191919;">
+        <thead class="thead-dark">
+            <tr style="text-align: center;">
                 <th>User</th>
                 <th>Roles</th>
                 <th></th>
@@ -46,8 +46,8 @@
 {
     <div class="modal show d-block" style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter:blur(2px); " tabindex="-1">
         <div class="modal-dialog">
-            <div class="modal-content" style="background-color: #F5F5F5; margin-top: 150px">
-                <div class="modal-header" >
+            <div class="modal-content" style="background-color: #393939; margin-top: 150px; border-radius:20px">
+                <div class="modal-header" style="border-bottom-color:#5B5B5B">
                     <h5 class="modal-title">Edit Roles for @selectedUser.Email</h5>
                     <button type="button" class="btn-close" @onclick="CloseEditRolesDialog"></button>
                 </div>
@@ -55,15 +55,15 @@
                     @foreach (var role in allRoles)
                     {
                             <input class="btn-check" type="checkbox" id="@($"checkbox-{role.Name}")" @bind="role.IsSelected" @bind:event="onchange">
-                            <label class="form-check-label btn btn-outline-success" style="width:130px" for="@($"checkbox-{role.Name}")">@role.Name</label>
+                        <label class="form-check-label btn btn-outline-secondary" style="width:130px; color:lightgray" for="@($"checkbox-{role.Name}")">@role.Name</label>
                     }
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" style="border-top-color:#5B5B5B">
                     <div class="me-auto">
                         <button class="btn btn-danger" @onclick="() => DeleteUser(selectedUser)">Delete User</button>
                     </div>
                     <button type="button" class="btn btn-secondary" @onclick="CloseEditRolesDialog">Cancel</button>
-                    <button type="button" class="btn btn-primary" @onclick="SaveRoles">Save</button>
+                    <button type="button" class="btn btn-success" @onclick="SaveRoles">Save</button>
                 </div>
             </div>
         </div>

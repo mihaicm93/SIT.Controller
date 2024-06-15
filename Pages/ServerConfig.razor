@@ -24,7 +24,7 @@
 
 <p>Welcome to the Server Management Dashboard. Change settings for your server directly from this interface.</p>
 
-<SurveyPrompt Title="Tell us how this tool is helping you manage your server!" />
+<SurveyPrompt Title="Tell us how this tool can improve to help you manage your server!" />
 
 <div data-bs-theme="dark">
     <button class="btn @(isServerRunning ? "btn-danger" : "btn-success")" @onclick="ToggleServer">
@@ -51,8 +51,8 @@
     <div class="d-grid gap-2">
         <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">Core Configuration</Button>
         <Collapse @ref="core">
-            <Card>
-                <CardBody style="height: auto; background-color: #ececec">
+            <Card Class="card-custom">
+                <CardBody Class="card-body-custom">
                     <div class="row mb-3">
                         <label class="col-md-2 col-form-label">Server Name</label>
                         <div class="col-md-10">
@@ -153,7 +153,7 @@ else
 {
     <div class="d-grid gap-2">
         <Button Type="ButtonType.Button" Color="ButtonColor.Warning" @onclick="ToggleOtherContentAsync" disabled="@isServerRunning">
-            Core Configuration is Disabled while the Server is running
+            Other Configuration is Disabled while the Server is running
         </Button>
     </div>
 }

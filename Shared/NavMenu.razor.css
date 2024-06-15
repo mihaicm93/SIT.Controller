@@ -1,17 +1,5 @@
-.navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.nav-scrollable {
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3e4347), to(#565b5f));
-    background: -moz-linear-gradient(0% 0% 270deg, #3e4347, #565b5f);
-    margin: 0;
-    padding: 0;
-}
 .top-row {
     height: 3.5rem;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#565b5f), to(#3e4347));
-    background: -moz-linear-gradient(0% 0% 270deg,#565b5f, #3e4347);
 }
 
 

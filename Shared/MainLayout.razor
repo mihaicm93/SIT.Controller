@@ -6,9 +6,9 @@
     <div class="sidebar">
         <NavMenu />
     </div>
-    <main>
+    <main class="main-container">
         <div class="top-row px-4 auth">
-            <LoginDisplay/>
+            <LoginDisplay />
         </div>
 
         <article class="content px-4">
@@ -19,10 +19,10 @@
 
 @code {
     // Inject NavigationManager
-    [Inject] private NavigationManager ?NavMan { get; set; }
+    [Inject] private NavigationManager? NavMan { get; set; }
 
     // Inject AuthenticationStateProvider to access authentication state
-    [Inject] private AuthenticationStateProvider ?AuthenticationStateProvider { get; set; }
+    [Inject] private AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
     // Override OnInitializedAsync method
     protected override async Task OnInitializedAsync()
@@ -46,14 +46,15 @@
         {
             throw new InvalidOperationException("User.Identity has not been injected.");
         }
+
         // Check if the app is running locally
         var isLocalhost = NavMan.BaseUri.Contains("localhost") || NavMan.BaseUri.Contains("127.0.0.1");
+
         // Check if the user is not authenticated and not already on the login page
         if (!authState.User.Identity.IsAuthenticated && !isLocalhost)
         {
             // Redirect to the login page
             NavMan.NavigateTo("Identity/Account/Login", true);
         }
-
     }
 }

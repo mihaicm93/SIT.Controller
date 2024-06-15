@@ -16,8 +16,8 @@
     </div>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
+<div class="@NavMenuCssClass nav-scrollable d-flex flex-column" @onclick="ToggleNavMenu">
+    <nav class="flex-column flex-grow-1">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
@@ -31,20 +31,20 @@
         <!-- Conditionally show Users Manager based on roles or conditions -->
         <AuthorizeView Roles="Administrator, Superuser">
             <Authorized>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="serverconfig">
-                <span class="oi oi-cog" aria-hidden="true"></span> Server Settings
-            </NavLink>
-        </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="serverconfig">
+                        <span class="oi oi-cog" aria-hidden="true"></span> Server Settings
+                    </NavLink>
+                </div>
             </Authorized>
         </AuthorizeView>
         <AuthorizeView Roles="Administrator">
             <Authorized>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="controllersettings">
-                <span class="oi oi-wrench" aria-hidden="true"></span> Controller Settings
-            </NavLink>
-        </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="controllersettings">
+                        <span class="oi oi-wrench" aria-hidden="true"></span> Controller Settings
+                    </NavLink>
+                </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="usersmanager">
                         <span class="oi oi-people" aria-hidden="true"></span> Users Manager
@@ -53,8 +53,15 @@
             </Authorized>
         </AuthorizeView>
     </nav>
+    <footer class="col-auto" style="color: #999; opacity: 20%; font-size: 12px; text-align: center; letter-spacing: 1px; backdrop-filter: blur(2px);">
+        <div class="container">
+            <a href="https://github.com/mihaicm93/SIT.Controller" target="_blank" rel="noopener noreferrer"
+               class="text-decoration-none text-light d-inline-block py-1">
+                &copy; 2024 - by Mihai <i class="bi bi-github" style="font-size: 14px;"></i>
+            </a>
+        </div>
+    </footer>
 </div>
-
 @code {
     private bool collapseNavMenu = true;
 
@@ -65,3 +72,4 @@
         collapseNavMenu = !collapseNavMenu;
     }
 }
+
