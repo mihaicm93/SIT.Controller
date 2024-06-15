@@ -51,8 +51,8 @@
     <div class="d-grid gap-2">
         <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">Core Configuration</Button>
         <Collapse @ref="core">
-            <Card Class="card-custom">
-                <CardBody Class="card-body-custom">
+            <Card Style="border-color: #6c757d; border-width: 2px;">
+                <CardBody style="height: auto; background-color:#5B5B5B;">
                     <div class="row mb-3">
                         <label class="col-md-2 col-form-label">Server Name</label>
                         <div class="col-md-10">
@@ -131,8 +131,8 @@ else
     <div class="d-grid gap-2">
         <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleOtherContentAsync" disabled="@isServerRunning">Other Configuration</Button>
         <Collapse @ref="other">
-            <Card>
-                <CardBody style="height: auto; background-color: #ececec">
+            <Card Style="border-color: #6c757d; border-width: 2px;">
+                <CardBody style="height: auto; background-color:#5B5B5B;">
                     <div class="row mb-3">
                         <label class="col-md-2 col-form-label">Winter</label>
                         <div class="col-md-10">
