@@ -17,8 +17,13 @@
 <SurveyPrompt Title="Tell us how this tool can improve to help you manage your server!" />
 
 <div class="mb-3">
-    <input type="text" @bind="username" style="max-width: 500px" placeholder="Enter your username" class="form-control" @oninput="UpdateSearchButtonState" />
-    <button class="btn btn-secondary mt-2" @onclick="SearchProfile" disabled="@IsSearchDisabled"><span class="oi oi-magnifying-glass" aria-hidden="true"></span>Search</button>
+    <input type="text" @bind="username"
+        style="max-width: 500px; background-color:#191919; color:white"
+        placeholder="Enter your username" class="form-control" @oninput="UpdateSearchButtonState" />
+    <button class="btn btn-secondary mt-2" @onclick="SearchProfile" disabled="@IsSearchDisabled">
+        <span class="oi oi-magnifying-glass" aria-hidden="true"></span>
+        Search
+    </button>
 </div>
 
 @if (profiles != null && profiles.Any())
@@ -27,7 +32,7 @@
         <h3>Search Results:</h3>
         @foreach (var profile in profiles)
         {
-            <div class="card mb-3">
+            <div class="card text-white bg-dark mb-3">
                 <div class="card-body">
                     <h5 class="card-title"><strong>Name:</strong>@profile.info.username</h5>
                     <hr>

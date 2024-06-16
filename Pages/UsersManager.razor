@@ -46,10 +46,9 @@
 {
     <div class="modal show d-block" style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter:blur(2px); " tabindex="-1">
         <div class="modal-dialog">
-            <div class="modal-content" style="background-color: #393939; margin-top: 150px; border-radius:20px">
+            <div class="modal-content">
                 <div class="modal-header" style="border-bottom-color:#5B5B5B">
                     <h5 class="modal-title">Edit Roles for @selectedUser.Email</h5>
-                    <button type="button" class="btn-close" @onclick="CloseEditRolesDialog"></button>
                 </div>
                 <div class="modal-body" style="display:inline; margin:auto; ">
                     @foreach (var role in allRoles)

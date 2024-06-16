@@ -48,11 +48,11 @@
 <hr>
 @if (@isServerRunning == false)
 {
-    <div class="d-grid gap-2">
+    <div class="card text-white bg-dark mb-3">
         <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">Core Configuration</Button>
         <Collapse @ref="core">
             <Card Style="border-color: #6c757d; border-width: 2px;">
-                <CardBody style="height: auto; background-color:#5B5B5B;">
+                <CardBody style="height: auto; ">
                     <div class="row mb-3">
                         <label class="col-md-2 col-form-label">Server Name</label>
                         <div class="col-md-10">
@@ -120,7 +120,7 @@
 else
 {
     <div class="d-grid gap-2">
-        <Button Type="ButtonType.Button" Color="ButtonColor.Warning" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">
+        <Button Type="ButtonType.Button" Color="ButtonColor.Warning" Style="background-color:#C84B31; color:white; border-color:#191919" @onclick="ToggleCoreContentAsync" disabled="@isServerRunning">
             Core Configuration is Disabled while the Server is running</Button>
     </div>
 }
@@ -132,7 +132,7 @@ else
         <Button Type="ButtonType.Button" Color="ButtonColor.Secondary" @onclick="ToggleOtherContentAsync" disabled="@isServerRunning">Other Configuration</Button>
         <Collapse @ref="other">
             <Card Style="border-color: #6c757d; border-width: 2px;">
-                <CardBody style="height: auto; background-color:#5B5B5B;">
+                <CardBody style="height: auto;">
                     <div class="row mb-3">
                         <label class="col-md-2 col-form-label">Winter</label>
                         <div class="col-md-10">
@@ -152,7 +152,7 @@ else
 else
 {
     <div class="d-grid gap-2">
-        <Button Type="ButtonType.Button" Color="ButtonColor.Warning" @onclick="ToggleOtherContentAsync" disabled="@isServerRunning">
+        <Button Type="ButtonType.Button" Color="ButtonColor.Warning" Style="background-color:#C84B31; color:white; border-color:#191919" @onclick="ToggleOtherContentAsync" disabled="@isServerRunning">
             Other Configuration is Disabled while the Server is running
         </Button>
     </div>
