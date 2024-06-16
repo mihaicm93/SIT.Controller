@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <div align="center">
   <a href="https://github.com/stayintarkov/StayInTarkov.Client">
-    <img src="wwwroot/sit-logo-5.png" alt="Logo" height="240">
+    <img src=".github/demo.gif" alt="Demo" height="240">
   </a>
 
   <h3 align="center">SIT.Controller</h3>
@@ -110,14 +110,6 @@ To get started with the application, follow these steps:
    - **Access User Manager**: Navigate to the User Manager section.
    - **Edit User Roles**: Locate your profile and click "Edit".
    - **Assign Administrator Role**: Check the Administrator role box and save changes.
-
-
-## Images
-
-
-<div align="center">
-  <img src="https://i.ibb.co/5289G0D/Recording-2024-06-16-at-10-39-37.gif" alt="SIT Controller Demo" width="600" />
-</div>
 
 
 
