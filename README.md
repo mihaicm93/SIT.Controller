@@ -5,7 +5,7 @@
   <a href="https://github.com/stayintarkov/StayInTarkov.Client">
     <img src="wwwroot/sit-logo-5.png" alt="Logo" height="240">
   </a>
-[img]https://i.imgur.com/tPHux90.gif[/img]
+
   <h3 align="center">SIT.Controller</h3>
 
   <p align="center">
@@ -116,7 +116,7 @@ To get started with the application, follow these steps:
 
 <p align="center">
 
-<img src="https://imgur.com/tPHux90.gif?raw=true" width="600" align="center" />
+<img src="https://i.ibb.co/5289G0D/Recording-2024-06-16-at-10-39-37.gif" width="600" align="center" />
 
 </p>
 
