@@ -2,9 +2,8 @@
 
 <!-- PROJECT LOGO -->
 <div align="center">
-  <a href="https://github.com/stayintarkov/StayInTarkov.Client">
-    <img src="wwwroot/sit-logo-5.png" alt="Logo" height="240">
-  </a>
+    <img src=".github/demo.gif" alt="Demo" width="600">
+
 
   <h3 align="center">SIT.Controller</h3>
 
