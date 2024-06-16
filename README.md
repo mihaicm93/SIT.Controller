@@ -115,8 +115,9 @@ To get started with the application, follow these steps:
 ## Images
 
 
-<img src="https://i.ibb.co/5289G0D/Recording-2024-06-16-at-10-39-37.gif?raw" width="600" align="center" />
-
+<div align="center">
+  <img src="https://i.ibb.co/5289G0D/Recording-2024-06-16-at-10-39-37.gif" alt="SIT Controller Demo" width="600" />
+</div>
 
 
 
