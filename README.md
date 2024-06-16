@@ -32,6 +32,9 @@
       <a href="#getting-started">Getting Started</a>
     </li>
     <li>
+      <a href="#images">Images</a>
+    </li>
+    <li>
       <a href="#license-summary">License Summary</a>
     </li>
     <li>
@@ -107,6 +110,16 @@ To get started with the application, follow these steps:
    - **Access User Manager**: Navigate to the User Manager section.
    - **Edit User Roles**: Locate your profile and click "Edit".
    - **Assign Administrator Role**: Check the Administrator role box and save changes.
+
+
+## Images
+
+<img src="https://i.imgur.com/J85d8bS.png" alt="Login-Register" width="400"/> <img src="https://i.imgur.com/2nKH5cL.png" alt="Index-MainPage" width="400"/>
+
+<img src="https://i.imgur.com/oGWJGrv.png" alt="Server-Profile" width="400"/> <img src="https://i.imgur.com/aVDCW2k.png" alt="Server-Settings" width="400"/>
+
+<img src="https://i.imgur.com/P82pp2R.png" alt="Controller-Settings" width="400"/> <img src="https://i.imgur.com/CkMcUOV.png" alt="User-Manager" width="400"/>
+
 
 
 ## License Summary
