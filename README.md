@@ -114,7 +114,11 @@ To get started with the application, follow these steps:
 
 ## Images
 
-<img src="https://imgur.com/tPHux90.gif"/>
+<p align="center">
+
+<img src="https://imgur.com/tPHux90.gif?raw=true" width="600" align="center" />
+
+</p>
 
 
 ## License Summary
