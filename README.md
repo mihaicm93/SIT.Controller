@@ -114,7 +114,7 @@ To get started with the application, follow these steps:
 
 ## Images
 
-<img src="https://imgur.com/tPHux90.gif" alt="Login-Register" width="800"/>
+<img src="https://imgur.com/tPHux90.gif"/>
 
 
 ## License Summary
