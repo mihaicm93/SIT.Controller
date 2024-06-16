@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <div align="center">
   <a href="https://github.com/stayintarkov/StayInTarkov.Client">
-    <img src=".github/demo.gif" alt="Demo" height="240">
+    <img src="wwwroot/logo.png" alt="Logo" height="240">
   </a>
 
   <h3 align="center">SIT.Controller</h3>
@@ -111,6 +111,11 @@ To get started with the application, follow these steps:
    - **Edit User Roles**: Locate your profile and click "Edit".
    - **Assign Administrator Role**: Check the Administrator role box and save changes.
 
+
+## Images
+<p align="center">
+    <img src=".github/demo.gif" alt="Demo" width="600">
+</p>
 
 
 ## License Summary
