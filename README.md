@@ -114,12 +114,7 @@ To get started with the application, follow these steps:
 
 ## Images
 
-<img src="https://i.imgur.com/J85d8bS.png" alt="Login-Register" width="400"/> <img src="https://i.imgur.com/2nKH5cL.png" alt="Index-MainPage" width="400"/>
-
-<img src="https://i.imgur.com/oGWJGrv.png" alt="Server-Profile" width="400"/> <img src="https://i.imgur.com/aVDCW2k.png" alt="Server-Settings" width="400"/>
-
-<img src="https://i.imgur.com/P82pp2R.png" alt="Controller-Settings" width="400"/> <img src="https://i.imgur.com/CkMcUOV.png" alt="User-Manager" width="400"/>
-
+<img src="https://imgur.com/tPHux90.gif" alt="Login-Register" width="800"/>
 
 
 ## License Summary
