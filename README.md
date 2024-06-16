@@ -5,8 +5,7 @@
   <a href="https://github.com/stayintarkov/StayInTarkov.Client">
     <img src="wwwroot/sit-logo-5.png" alt="Logo" height="240">
   </a>
-[Imgur](https://imgur.com/tPHux90)
-
+[img]https://i.imgur.com/tPHux90.gif[/img]
   <h3 align="center">SIT.Controller</h3>
 
   <p align="center">
