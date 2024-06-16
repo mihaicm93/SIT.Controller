@@ -114,11 +114,10 @@ To get started with the application, follow these steps:
 
 ## Images
 
-<p align="center">
 
-<img src="https://i.ibb.co/5289G0D/Recording-2024-06-16-at-10-39-37.gif" width="600" align="center" />
+<img src="https://i.ibb.co/5289G0D/Recording-2024-06-16-at-10-39-37.gif?raw" width="600" align="center" />
 
-</p>
+
 
 
 ## License Summary
