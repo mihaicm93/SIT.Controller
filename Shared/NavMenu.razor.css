@@ -6,6 +6,7 @@
     backdrop-filter: blur(8px);
     background: rgba(25, 25, 25, 0.2);
     padding-bottom: 1rem;
+    display: flex;
 }
 
     .sidebar::before {
