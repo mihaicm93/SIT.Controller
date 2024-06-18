@@ -9,6 +9,9 @@ using System.Text.Json.Nodes;
 
 namespace SIT.Controller.Controllers
 {
+    /// <summary>
+    /// Manages the lifecycle of the server process, including starting, stopping, and handling output streams.
+    /// </summary>
     public class ServerManager
     {
         public bool errorStartingServer { get; set; }
@@ -39,7 +42,8 @@ namespace SIT.Controller.Controllers
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
-                CreateNoWindow = true,
+                CreateNoWindow = false,
+                WindowStyle = ProcessWindowStyle.Minimized,
                 StandardOutputEncoding = Encoding.UTF8,
                 StandardErrorEncoding = Encoding.UTF8
             };
