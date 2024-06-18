@@ -12,32 +12,33 @@
 else
 {
     <div class="mt-3">
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Rank</th>
-                        <th>Username</th>
-                        <th>Level</th>
-                        <th>Experience</th>
-                        <th>Side</th>
+        <div class="table-responsive" style="border-radius: 10px; overflow:scroll; opacity: 0.8; backdrop-filter: blur(2px);">
+            <table class="table table-hover" style="border-radius: 10px; border-color: #191919; background-color: #191919;">
+                <thead class="table">
+                    <tr style="text-align: center;">
+                        <th style="color: white;">Rank</th>
+                        <th style="color: white;">Username</th>
+                        <th style="color: white;">Level</th>
+                        <th style="color: white;">Experience</th>
+                        <th style="color: white;">Side</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var profile in profiles)
                     {
                         <tr>
-                            <td>@profile.Rank</td>
-                            <td>@profile.Username</td>
-                            <td>@profile.Level</td>
-                            <td>@profile.Experience</td>
-                            <td>@profile.Side</td>
+                            <td style="text-align: center; color: white; vertical-align: middle;">@profile.Rank</td>
+                            <td style="text-align: center; color: white; vertical-align: middle;">@profile.Username</td>
+                            <td style="text-align: center; color: white; vertical-align: middle;">@profile.Level</td>
+                            <td style="text-align: center; color: white; vertical-align: middle;">@profile.Experience</td>
+                            <td style="text-align: center; color: white; vertical-align: middle;">@profile.Side</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
+
 }
 
 @code {
