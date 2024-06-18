@@ -1,0 +1,19 @@
+﻿.form-control {
+    max-width: 100px;
+    background-color: #333;
+    border: 0px;
+    color: white;
+    margin: 4px;
+}
+
+.form-check {
+    margin: 10px;
+}
+
+.form-check-input {
+    background-color: #555;
+    border-color: #555;
+}
+.form-check-label {
+    font-size: 18px;
+}

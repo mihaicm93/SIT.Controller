@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace SIT.Controller.Controllers
 {
+    /// <summary>
+    /// Service for managing game profiles, including loading, saving(broken), and searching profiles.
+    /// </summary>
     public class GameProfileService
     {
         private readonly string profilesDirectory;
@@ -61,7 +64,7 @@ namespace SIT.Controller.Controllers
             }
         }
 
-        public List<UserProfile> SearchProfilesByUsername(string username)
+        public async Task<List<UserProfile>> SearchProfilesByUsernameAsync(string? username = null)
         {
             var profiles = new List<UserProfile>();
 
@@ -69,13 +72,11 @@ namespace SIT.Controller.Controllers
             {
                 try
                 {
-                    // Use JsonDocument for streaming JSON parsing
                     using (var fileStream = File.OpenRead(file))
                     {
-                        var jsonDocument = JsonDocument.Parse(fileStream);
+                        var jsonDocument = await JsonDocument.ParseAsync(fileStream);
                         var root = jsonDocument.RootElement;
 
-                        // Deserialize the UserProfile from the JSON document
                         var userProfile = new UserProfile
                         {
                             info = new UserProfile.Info
@@ -96,8 +97,8 @@ namespace SIT.Controller.Controllers
                             }
                         };
 
-                        // Add the deserialized profile to the list
-                        if (userProfile.info.username.Equals(username, StringComparison.OrdinalIgnoreCase))
+                        // Check if username is null or empty to include all profiles
+                        if (string.IsNullOrEmpty(username) || userProfile.info.username.Equals(username, StringComparison.OrdinalIgnoreCase))
                         {
                             profiles.Add(userProfile);
                         }

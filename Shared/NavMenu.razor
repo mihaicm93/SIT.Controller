@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable d-flex flex-column" @onclick="ToggleNavMenu">
+<div class="sidebar @NavMenuCssClass nav-scrollable d-flex flex-column">
     <nav class="flex-column flex-grow-1">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -62,10 +62,11 @@
         </div>
     </footer>
 </div>
+
 @code {
     private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : ""; // Return "collapse" when true, "" (or null) when false
 
     private void ToggleNavMenu()
     {

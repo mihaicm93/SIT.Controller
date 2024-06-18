@@ -30,23 +30,23 @@
         <hr>
         <div class="form-group">
             <label for="requiredLength">Required Password Length:</label>
-            <input type="number" style="max-width:100px; background-color:#191919; border:0px; color:white; margin: 4px;" class="form-control" id="requiredLength" @bind="RegistrationStateService.PasswordOptions.RequiredLength" min="6" max="30" oninput="validity.valid||(value=>'');" />
+            <input type="number" style="" class="form-control" id="requiredLength" @bind="RegistrationStateService.PasswordOptions.RequiredLength" min="6" max="30" oninput="validity.valid||(value=>'');" />
         </div>
-        <div class="form-check" style="margin: 10px">
-            <input type="checkbox" style="background-color:#555; border-color:#555" class="form-check-input" id="requireNonAlphanumeric" @bind="RegistrationStateService.PasswordOptions.RequireNonAlphanumeric" />
-            <label class="form-check-label" style="font-size:18px" for="requireNonAlphanumeric">Require non-alphanumeric character</label>
+        <div class="form-check" >
+            <input type="checkbox" class="form-check-input" id="requireNonAlphanumeric" @bind="RegistrationStateService.PasswordOptions.RequireNonAlphanumeric" />
+            <label class="form-check-label" for="requireNonAlphanumeric">Require non-alphanumeric character</label>
         </div>
-        <div class="form-check" style="margin: 10px">
-            <input type="checkbox" style="background-color:#555; border-color:#555" class="form-check-input" id="requireLowercase" @bind="RegistrationStateService.PasswordOptions.RequireLowercase" />
+        <div class="form-check" >
+            <input type="checkbox" class="form-check-input" id="requireLowercase" @bind="RegistrationStateService.PasswordOptions.RequireLowercase" />
             <label class="form-check-label" style="font-size:18px" for="requireLowercase">Require lowercase character</label>
         </div>
-        <div class="form-check" style="margin: 10px">
-            <input type="checkbox" style="background-color:#555; border-color:#555" class="form-check-input" id="requireUppercase" @bind="RegistrationStateService.PasswordOptions.RequireUppercase" />
-            <label class="form-check-label" style="font-size:18px" for="requireUppercase">Require uppercase character</label>
+        <div class="form-check" >
+            <input type="checkbox" class="form-check-input" id="requireUppercase" @bind="RegistrationStateService.PasswordOptions.RequireUppercase" />
+            <label class="form-check-label" for="requireUppercase">Require uppercase character</label>
         </div>
-        <div class="form-check" style="margin:10px">
-            <input type="checkbox" style="background-color:#555; border-color:#555" class="form-check-input" id="requireDigit" @bind="RegistrationStateService.PasswordOptions.RequireDigit" />
-            <label class="form-check-label" style="font-size:18px" for="requireDigit">Require digit</label>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="requireDigit" @bind="RegistrationStateService.PasswordOptions.RequireDigit" />
+            <label class="form-check-label" for="requireDigit">Require digit</label>
         </div>
         <button class="btn btn-secondary mt-3" @onclick="UpdatePasswordOptions">
             <i class="bi bi-floppy"></i>
@@ -61,6 +61,7 @@
     </CardBody>
 </Card>
 <hr>
+
 
 @code {
     private bool showConfirmation = false;

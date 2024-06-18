@@ -1,5 +1,8 @@
 using System.Security.Claims;
 
+/// <summary>
+/// Middleware to identify requests originating from localhost and add "Administrator" role to claims if not authenticated.
+/// </summary>
 public class LocalhostMiddleware
 {
     private readonly RequestDelegate _next;

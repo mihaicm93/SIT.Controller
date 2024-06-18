@@ -3,7 +3,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
 
-
+/// <summary>
+/// Service for managing weather configuration, including updating specific fields and loading the current configuration.
+/// </summary>
 public class WeatherConfig
 {
     [JsonPropertyName("acceleration")]

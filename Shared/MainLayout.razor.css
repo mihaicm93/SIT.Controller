@@ -2,12 +2,12 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(to bottom right, #191919, #585858 );
+    background: linear-gradient(to bottom right, #191919, #585858);
     min-height: 100vh;
     color: white;
 }
 
-.main-container, .sidebar {
+.main-container {
     min-height: 100vh;
     color: white;
 }
@@ -16,50 +16,25 @@ main {
     flex: 1;
 }
 
-.sidebar {
-    position: relative;
-    overflow: hidden; /* Ensure gradient spans entire sidebar */
-    border-right: none; /* Remove solid border */
-    backdrop-filter: blur(8px); /* Apply backdrop filter for blurring effect */
-    background: rgba(25, 25, 25, 0.2); /* Semi-transparent background color */
-}
-
-    .sidebar::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        width: 10px; /* Adjust width of gradient border as needed */
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, /* 0% opacity (fully transparent) at the top */
-        rgba(0, 0, 0, 0.2) 50%, /* 20% opacity (semi-transparent) in the middle */
-        rgba(0, 0, 0, 0) 100% /* 0% opacity (fully transparent) at the bottom */
-        );
-    }
-
 .top-row {
-    background: rgba(25, 25, 25, 0.2); /* Semi-transparent background color */
-    justify-content: flex-end; /* Align items to the end of the flex container */
-    height: 3.5rem; /* Adjust height as needed */
-    display: flex; /* Enable flexbox layout */
-    align-items: center; /* Center items vertically */
-    position: relative; /* Ensure proper stacking context for pseudo-element */
-    backdrop-filter: blur(6px); /* Apply backdrop filter for blurring effect */
+    background: rgba(25, 25, 25, 0.2);
+    justify-content: flex-end;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+    backdrop-filter: blur(6px);
 }
 
     .top-row::before {
         content: '';
         position: absolute;
-        bottom: 0; /* Position the gradient at the bottom */
+        bottom: 0;
         left: 0;
         right: 0;
-        height: 5px; /* Adjust height of gradient border as needed */
-        background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, /* 0% opacity (fully transparent) at the left */
-        rgba(0, 0, 0, 0.2) 50%, /* 20% opacity (semi-transparent) in the middle */
-        rgba(0, 0, 0, 0) 100% /* 0% opacity (fully transparent) at the right */
-        );
+        height: 5px;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%);
     }
-
 
     .top-row ::deep a, .top-row .btn-link {
         white-space: nowrap;
@@ -71,30 +46,13 @@ main {
         text-overflow: ellipsis;
     }
 
-@media (max-width: 640.98px) {
-    .top-row:not(.auth) {
+@media (min-width: 641px) {
+    .navbar-toggler {
         display: none;
     }
 
-    .top-row.auth {
-        justify-content: space-between;
-    }
-
-    .top-row a, .top-row .btn-link {
-        margin-left: 0;
-    }
-}
-
-@media (min-width: 641px) {
     .page {
         flex-direction: row;
-    }
-
-    .sidebar {
-        width: 250px;
-        height: 100vh;
-        position: sticky;
-        top: 0;
     }
 
     .top-row {
@@ -106,5 +64,12 @@ main {
     .top-row, article {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
+    }
+}
+
+
+@media (max-width: 640px) {
+    .top-row .navbar-toggler {
+        display: flex;
     }
 }

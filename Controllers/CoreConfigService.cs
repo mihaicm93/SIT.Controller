@@ -3,6 +3,11 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
+
+
+/// <summary>
+/// Represents the server core configuration located in Server\configs\Core.json.
+/// </summary>
 public class CoreConfig
 {
     [JsonPropertyName("serverName")]
@@ -36,11 +41,15 @@ public class CoreConfigService
         coreConfigPath = Path.Combine(serverPath, "Aki_Data", "Server", "configs", "core.json");
     }
 
+
+    /// <summary>
+    /// Updates a specific field in the configuration file.
+    /// </summary>
     public void UpdateField<T>(string fieldPath, T value)
     {
         if (!File.Exists(coreConfigPath))
         {
-            throw new FileNotFoundException("Configuration file not found.");
+            throw new FileNotFoundException("Core Configuration file not found.");
         }
 
         var jsonString = File.ReadAllText(coreConfigPath);
