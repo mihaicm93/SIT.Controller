@@ -1,12 +1,11 @@
 .sidebar {
     color: white;
-    position: relative;
+    position: fixed;
     overflow: hidden;
     border-right: none;
     backdrop-filter: blur(8px);
     background: rgba(25, 25, 25, 0.2);
     padding-bottom: 1rem;
-    display: flex;
 }
 
     .sidebar::before {
@@ -21,6 +20,15 @@
 
 .top-row {
     height: 3.5rem;
+    position: sticky;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 100%);
+    backdrop-filter: blur(8px);
+    top: 0;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    z-index: 1000;
 }
 
 .navbar-brand:hover {
@@ -29,6 +37,11 @@
 
 .navbar-brand {
     font-size: 1.1rem;
+    text-decoration: none; /* Ensure no underline */
+    color: white;
+    margin-right: 1rem; /* Adjust margin as needed */
+    display: flex; /* Ensure flex layout for proper alignment */
+    align-items: center; /* Center vertically */
 }
 
 .oi {
@@ -89,6 +102,7 @@
     .sidebar {
         overflow-y: auto;
         max-height: calc(100vh - 3.5rem) !important;
+        position:relative;
     }
 
     .flex-column {
