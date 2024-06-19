@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
+
 
 namespace SIT.Controller.Areas.Identity.Pages.Account
 {
@@ -19,11 +21,14 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _sender;
+        private readonly bool _emailSenderEnabled;
 
-        public RegisterConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender sender)
+
+        public RegisterConfirmationModel(UserManager<IdentityUser> userManager, IEmailSender sender, IConfiguration configuration)
         {
             _userManager = userManager;
             _sender = sender;
+            _emailSenderEnabled = configuration.GetValue<bool>("EmailSender");
         }
 
         /// <summary>
@@ -59,7 +64,7 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
             }
 
             Email = email;
-            DisplayConfirmAccountLink = false;
+            DisplayConfirmAccountLink = !_emailSenderEnabled;
             if (DisplayConfirmAccountLink)
             {
                 var userId = await _userManager.GetUserIdAsync(user);

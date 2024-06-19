@@ -20,6 +20,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using SIT.Controller.Components.Account;
 using SIT.Controller.Controllers;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+
 
 namespace SIT.Controller.Areas.Identity.Pages.Account
 {
@@ -32,6 +35,8 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly RegistrationStateService _registrationStateService;
         private readonly IEmailSender<IdentityUser> _emailSender;
+        private readonly bool _emailSenderEnabled;
+
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -39,6 +44,7 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender<IdentityUser> emailSender,
+            IConfiguration configuration,
             RegistrationStateService registrationStateService)
         {
             _userManager = userManager;
@@ -47,6 +53,7 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _emailSenderEnabled = configuration.GetValue<bool>("EmailSender");
             _registrationStateService = registrationStateService;
         }
 
@@ -123,16 +130,22 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendConfirmationLinkAsync(user, Input.Email, callbackUrl);
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    if (_emailSenderEnabled)
                     {
+                        await _emailSender.SendConfirmationLinkAsync(user, Input.Email, callbackUrl);
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        {
+                            return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
                     }
                 }
                 foreach (var error in result.Errors)
