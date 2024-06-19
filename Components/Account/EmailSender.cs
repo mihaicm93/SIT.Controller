@@ -40,7 +40,6 @@ namespace SIT.Controller.Components.Account
         {
             try
             {
-                // Check if Mailgun credentials are configured
                 if (string.IsNullOrEmpty(_options.ApiKey) || string.IsNullOrEmpty(_options.Domain))
                 {
                     throw new Exception("Mailgun ApiKey or Domain is not set");
@@ -54,30 +53,18 @@ namespace SIT.Controller.Components.Account
 
                 // Create RestRequest for sending message
                 var request = new RestRequest("messages", Method.Post);
-                request.AddParameter("from", "SIT Controller <noreply@mg.sit.publicvm.com>");
+                request.AddParameter("from", $"SIT Controller <noreply@{_options.Domain}>");
                 request.AddParameter("to", toEmail);
                 request.AddParameter("subject", subject);
-                request.AddParameter("html", message);  // Use 'html' instead of 'text' if sending HTML content
+                request.AddParameter("html", message); 
 
-                // Log Mailgun API Key and Domain
-                _logger.LogInformation("Mailgun API Key: {ApiKey}", _options.ApiKey);
-                _logger.LogInformation("Mailgun Domain: {Domain}", _options.Domain);
 
-                // Set Authorization header
                 request.AddHeader("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes($"api:{_options.ApiKey}")));
 
-                // Log request details
                 _logger.LogInformation("Sending email request to Mailgun API");
 
-                // Execute the request asynchronously
                 var response = await client.ExecuteAsync(request);
 
-                // Log response details
-                _logger.LogInformation("Received response from Mailgun API");
-                _logger.LogInformation("Response Status Code: {StatusCode}", response.StatusCode);
-                _logger.LogInformation("Response Content: {Content}", response.Content);
-                _logger.LogInformation("Response Error Message: {ErrorMessage}", response.ErrorMessage);
-                _logger.LogInformation("Response Headers: {Headers}", response.Headers);
 
                 // Handle response status
                 if (response.IsSuccessful)
@@ -93,7 +80,7 @@ namespace SIT.Controller.Components.Account
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Exception occurred while sending email to {EmailAddress}", toEmail);
-                throw; // Re-throw the exception to propagate it further if needed
+                throw;
             }
         }
     }
