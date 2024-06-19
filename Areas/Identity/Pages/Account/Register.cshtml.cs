@@ -18,7 +18,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using SIT.Controller.Components.Account;
 using SIT.Controller.Controllers;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+
 
 namespace SIT.Controller.Areas.Identity.Pages.Account
 {
@@ -29,15 +33,18 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
         private readonly RegistrationStateService _registrationStateService;
+        private readonly IEmailSender<IdentityUser> _emailSender;
+        private readonly bool _emailSenderEnabled;
+
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
+            IEmailSender<IdentityUser> emailSender,
+            IConfiguration configuration,
             RegistrationStateService registrationStateService)
         {
             _userManager = userManager;
@@ -46,6 +53,7 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _emailSenderEnabled = configuration.GetValue<bool>("EmailSender");
             _registrationStateService = registrationStateService;
         }
 
@@ -110,7 +118,7 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    // Assign the "User" role to the new user
+                    // Assigning the "User" role to the new user
                     await _userManager.AddToRoleAsync(user, "User");
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -122,17 +130,22 @@ namespace SIT.Controller.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    if (_emailSenderEnabled)
                     {
+                        await _emailSender.SendConfirmationLinkAsync(user, Input.Email, callbackUrl);
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        {
+                            return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
                     }
                 }
                 foreach (var error in result.Errors)

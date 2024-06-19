@@ -6,11 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SIT.Controller.Components.Account;
 using SIT.Controller.Areas.Identity;
 using SIT.Controller.Controllers;
 using SIT.Controller.Data;
 using System;
 using System.IO;
+using SIT.Controller.Areas.EmailSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,14 +20,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
 builder.Configuration.AddJsonFile("config.json", optional: false, reloadOnChange: true);
 
+
 // Add services to the container
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.Configure<MailgunOptions>(builder.Configuration.GetSection("MailgunOptions"));
+builder.Services.AddTransient<IEmailSender<IdentityUser>, EmailSender>();
+
+
 builder.Services.AddRazorPages();
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddServerSideBlazor();
@@ -34,6 +43,9 @@ builder.Services.AddSingleton<ServerManager>();
 builder.Services.AddSingleton<WeatherConfigService>();
 builder.Services.AddSingleton<RegistrationStateService>();
 builder.Services.AddSingleton<GameProfileService>();
+builder.Services.AddSingleton<IEmailSender<IdentityUser>, EmailSender>();
+
+
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ILocalhostService, LocalhostService>();

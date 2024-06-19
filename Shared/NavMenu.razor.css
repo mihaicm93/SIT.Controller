@@ -7,6 +7,7 @@
     background: rgba(25, 25, 25, 0.2);
     padding-bottom: 1rem;
     width: 220px;
+
 }
 
     .sidebar::before {
@@ -39,11 +40,11 @@
 
 .navbar-brand {
     font-size: 1.1rem;
-    text-decoration: none; /* Ensure no underline */
+    text-decoration: none;
     color: white;
-    margin-right: 1rem; /* Adjust margin as needed */
-    display: flex; /* Ensure flex layout for proper alignment */
-    align-items: center; /* Center vertically */
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
 }
 
 .oi {
@@ -105,6 +106,7 @@
         overflow-y: auto;
         max-height: calc(100vh - 3.5rem) !important;
         position:relative;
+        width:auto;
     }
 
     .flex-column {
